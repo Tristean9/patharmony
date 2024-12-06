@@ -48,5 +48,29 @@ export const handlers = [
 			message: "违停信息提交成功",
 			error: null,
 		});
-	}),
+    }),
+    http.post('/api/get-guard-info', async ({ request }) => {
+        // 可能要验证一下保安的身份信息
+        console.log(request.body);
+
+        return HttpResponse.json([
+			{
+				reportId: 1000234,
+				vehicleType: "自行车",
+				handled: false,
+			},
+			{
+				reportId: 1000235,
+				vehicleType: "电动车",
+				handled: false,
+			},
+			{
+				reportId: 1000236,
+                vehicleType: "机动车",
+                vehicleId: "ABC123",
+				handled: false,
+			},
+		]);
+    })
+
 ];
