@@ -22,7 +22,11 @@ const InfoForm = () => {
     const onFinish: FormProps["onFinish"] = async (values) => {
         console.log("Submitting:", values);
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-violation-info`, values);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-violation-info`, values, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             const { message } = response.data;
             setSubmitSuccess(true);
             setSubmitMessage(message);
