@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Result, Table } from "antd";
 import type { TableProps, TableColumnsType } from 'antd';
+import EditableTable from "./components/EditableTable";
 
 
 export interface GuardInfo {
@@ -16,9 +17,9 @@ export interface GuardInfo {
 
 interface DataType extends GuardInfo {
     guardRemark?: string
-//     isValid: boolean
-//     guardName: string
-//     guardRemark?: string
+    //     isValid: boolean
+    //     guardName: string
+    //     guardRemark?: string
 
 }
 
@@ -120,7 +121,7 @@ export default function Guard() {
             ];
 
             return (
-                <Table<DataType> columns={columns}  dataSource={selectedInfo} rowKey="reportId" />
+                <Table<DataType> columns={columns} dataSource={selectedInfo} rowKey="reportId" />
             )
         }
     }
@@ -128,8 +129,9 @@ export default function Guard() {
     return (
         <div>
             {showError()}
-            {showAllInfo()}
-            {showSelectedInfo()}
+            {/* {showAllInfo()} */}
+            {/* {showSelectedInfo()} */}
+            <EditableTable />
         </div>
     )
 };
