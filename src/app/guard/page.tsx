@@ -1,40 +1,45 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Result, Table } from "antd";
-import type { TableProps, TableColumnsType } from 'antd';
+import { Result } from "antd";
 import EditableTable from "./components/EditableTable";
+import { VehicleType } from "@/types";
+import { getCurrentDate } from "@/utils";
 
 
-export interface GuardInfo {
+export interface GuardSubmitParams {
+    dateRange: string
+    handled: boolean
+}
+
+
+export interface GuardSubmitResponse {
     reportId: string
-    vehicleType: '自行车' | '电动车' | '机动车'
-    vehicleId?: string
-    violationRemarks?: string;
-    location?: string
-    hasHandled: '是' | '否'
+    vehicleType: VehicleType
+    plateNumber: string
+    remark: string;
+    guardRemark: string
+    location: string
+    confirmed: boolean
+    handled: boolean
 }
-
-interface DataType extends GuardInfo {
-    guardRemark?: string
-    //     isValid: boolean
-    //     guardName: string
-    //     guardRemark?: string
-
-}
-
 
 
 export default function Guard() {
     const [error, setError] = useState<string | null>(null);
-    const [guardInfo, setGuardInfo] = useState<GuardInfo[]>([])
-    const [selectedInfo, setSelectedInfo] = useState<DataType[]>([]); // 用于管理选中行的状态
+    const [guardInfo, setGuardInfo] = useState<GuardSubmitResponse[]>([])
+    // const [selectedInfo, setSelectedInfo] = useState<DataType[]>([]); // 用于管理选中行的状态
 
 
     useEffect(() => {
         const fetchGuardInfo = async () => {
             try {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/get-guard-info`)
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/session/reports/getReportList`, {
+                    date: getCurrentDate(),
+                    handled: false,
+                    dateFrom: '00:00:00',
+                    dateEnd: '23:59:59'
+                })
                 const { data } = response
                 console.log(data);
 
@@ -59,78 +64,10 @@ export default function Guard() {
         }
     };
 
-    const showAllInfo = () => {
-        if (guardInfo) {
-
-            const columns: TableColumnsType<GuardInfo> = [
-                {
-                    title: '选中',
-                    dataIndex: 'handled',
-                    key: 'handled',
-                    render: (text) => <a>{text}</a>,
-                },
-                {
-                    title: 'report id',
-                    dataIndex: 'reportId',
-                    key: 'reportId',
-                },
-                {
-                    title: '车辆类型',
-                    dataIndex: 'vehicleType',
-                    key: 'vehicleType',
-                },
-            ];
-
-            const rowSelection: TableProps<DataType>['rowSelection'] = {
-                onChange: (newSelectedInfo: React.Key[], selectedRows: DataType[]) => {
-                    setSelectedInfo(selectedRows); // 更新选中状
-                    console.log('selectedRows: ', selectedRows);
-                },
-                getCheckboxProps: (record: DataType) => ({
-                    name: record.reportId,
-                }),
-                type: 'checkbox'
-            };
-
-            return (
-                <Table<DataType> columns={columns} rowSelection={rowSelection} dataSource={guardInfo} rowKey="reportId" />
-            )
-        }
-    }
-
-    const showSelectedInfo = () => {
-        if (selectedInfo) {
-
-            const columns: TableColumnsType<GuardInfo> = [
-                {
-                    title: '选中',
-                    dataIndex: 'handled',
-                    key: 'handled',
-                    render: (text) => <a>{text}</a>,
-                },
-                {
-                    title: 'report id',
-                    dataIndex: 'reportId',
-                    key: 'reportId',
-                },
-                {
-                    title: '车辆类型',
-                    dataIndex: 'vehicleType',
-                    key: 'vehicleType',
-                },
-            ];
-
-            return (
-                <Table<DataType> columns={columns} dataSource={selectedInfo} rowKey="reportId" />
-            )
-        }
-    }
 
     return (
         <div>
             {showError()}
-            {/* {showAllInfo()} */}
-            {/* {showSelectedInfo()} */}
             <EditableTable />
         </div>
     )

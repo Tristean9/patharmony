@@ -1,32 +1,26 @@
 import { http, HttpResponse } from "msw";
-
-interface ViolationInfo {
-	vehicleType?: string;
-	violationRemarks?: string;
-	vehicleId?: string;
-}
+import { StudentSubmitParams } from "@/app/student/components/InfoForm";
 
 export const handlers = [
-	http.get("/api/get-map-api", () => {
+	http.get("/api/session/locationMap", () => {
 		return HttpResponse.json({
-			AMAP_KEY: "37dd5c21fd9ed2018ae1b97796b0e171",
-			AMAP_SECURITY_JS_CODE: "4bffedc3a6694cb3490719e29c24dd71",
+			apikey: "37dd5c21fd9ed2018ae1b97796b0e171"
+			// AMAP_SECURITY_JS_CODE: "4bffedc3a6694cb3490719e29c24dd71",
 		});
 	}),
-	http.post("/api/submit-violation-info", async ({ request }) => {
+	http.post("/api/session/report", async ({ request }) => {
 		// 手动解析 JSON 请求体
 		const requestBody = await request.json();
-		const { vehicleType, violationRemarks, vehicleId } =
-			requestBody as ViolationInfo;
+		const { vehicleType, plateNumber } = requestBody as StudentSubmitParams;
 
 		console.log("提交的违停信息:", requestBody);
 
 		// 验证输入信息
-		if (!vehicleType || !violationRemarks || !vehicleId) {
+		if (!vehicleType || !plateNumber) {
 			console.log("提交失败：信息不完整", requestBody);
 			return HttpResponse.json({
 				success: false,
-				message: "信息不完整，请填写所有字段。",
+				message: "信息不完整，请确保填写车辆字段。",
 				error: "缺少字段",
 			});
 		}
@@ -45,15 +39,14 @@ export const handlers = [
 		// 如果所有验证通过，返回成功响应
 		return HttpResponse.json({
 			success: true,
-			message: "违停信息提交成功",
-			error: null,
+			message: "反馈成功",
 		});
-    }),
-    http.post('/api/get-guard-info', async ({ request }) => {
-        // 可能要验证一下保安的身份信息
-        console.log(request.body);
+	}),
+	http.post("/api/session/reports/getReportList", async ({ request }) => {
+		// 可能要验证一下保安的身份信息
+		console.log(request.body);
 
-        return HttpResponse.json([
+		return HttpResponse.json([
 			{
 				reportId: 1000234,
 				vehicleType: "自行车",
@@ -66,11 +59,10 @@ export const handlers = [
 			},
 			{
 				reportId: 1000236,
-                vehicleType: "机动车",
-                vehicleId: "ABC123",
+				vehicleType: "机动车",
+				vehicleId: "ABC123",
 				handled: false,
 			},
 		]);
-    })
-
+	}),
 ];

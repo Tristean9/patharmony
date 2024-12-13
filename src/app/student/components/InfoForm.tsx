@@ -1,4 +1,3 @@
-'use client'
 import {
     Row,
     Button,
@@ -12,21 +11,42 @@ import type { FormProps } from "antd";
 import { useState } from "react";
 import axios from "axios";
 
-const InfoForm = () => {
+interface InfoFormProps {
+    location: string
+}
+
+export interface StudentSubmitParams {
+    vehicleType: string;
+    plateNumber: string;
+    remark?: string;
+    location: string;
+}
+
+export interface StudentSubmitResponse {
+    success: boolean;
+    message: string;
+    error?: string;
+}
+
+
+const  InfoForm: React.FC<InfoFormProps> = ({ location }) => {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
 
     const onFinish: FormProps["onFinish"] = async (values) => {
-        console.log("Submitting:", values);
+
+        const submitValues: StudentSubmitParams = { ...values, location };
+        console.log("Submitting:", submitValues);
+
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-violation-info`, values, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/session/report`, submitValues, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            const { message } = response.data;
-            setSubmitSuccess(true);
+            const { success, message } = response.data as StudentSubmitResponse;
+            setSubmitSuccess(success);
             setSubmitMessage(message);
 
         } catch (error) {
@@ -46,7 +66,6 @@ const InfoForm = () => {
                         extra={<Button type="primary"> 返回再次提交</Button>}
                     />
                 </>
-
             );
         }
     };
@@ -94,7 +113,7 @@ const InfoForm = () => {
                         <Col span={12}>
                             <Form.Item
                                 label="车辆识别信息(如车牌号)"
-                                name="vehicleId"
+                                name="plateNumber"
                             >
                                 <Input />
                             </Form.Item>
@@ -102,7 +121,7 @@ const InfoForm = () => {
                     </Row>
                     <Form.Item
                         label="违停情况备注"
-                        name={"violationRemarks"}
+                        name={"remark"}
                         labelCol={{ span: 24 }}
                         wrapperCol={{ span: 24 }}
                     >
