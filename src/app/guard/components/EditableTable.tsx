@@ -54,6 +54,8 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     children,
     ...restProps
 }) => {
+    console.log(record, index);
+    
     const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
 
     return (
@@ -140,7 +142,7 @@ const EditableTable: React.FC = () => {
         {
             title: 'operation',
             dataIndex: 'operation',
-            render: (_: any, record: DataType) => {
+            render: (index: number, record: DataType) => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>

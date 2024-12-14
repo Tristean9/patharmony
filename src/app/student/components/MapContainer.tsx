@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import "@amap/amap-jsapi-types";
@@ -24,7 +25,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     // 获取当前定位
     const getLocation = () => {
-        if (navigator.geolocation) {
+        if (typeof window !== "undefined" && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     setLocation({
@@ -57,6 +58,8 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
             setMapAPIKey(apikey);
         } catch (error) {
+            // 暂时增加，之后删除
+            setMapAPIKey(process.env.NEXT_PUBLIC_AMAP_API_KEY as string);
             setError(axios.isAxiosError(error) ? error.response?.data?.error : "获取高德地图API秘钥失败");
         } finally {
             setLoading(false);
@@ -69,6 +72,11 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
         if (!mapAPIKey || !location) {
             return
+        }
+
+        // 检查 window是否可用
+        if (typeof window === "undefined") {
+            return;
         }
 
         try {
@@ -126,7 +134,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
             <div
                 id="map-container"
                 className={"map-container"}
-                style={{ height: "800px" }}
+                style={{ height: "350px" }}
             ></div>
             <Button onClick={handleReposition}>重新定位</Button>
         </div>

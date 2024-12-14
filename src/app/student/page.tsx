@@ -1,8 +1,10 @@
 'use client'
 import { useState } from "react";
 import InfoForm from "./components/InfoForm";
-import MapContainer from "./components/MapContainer";
 import Notice from "./components/Notice";
+import dynamic from 'next/dynamic';
+
+const MapContainer = dynamic(() => import('./components/MapContainer'), { ssr: false });
 
 export default function Student() {
 

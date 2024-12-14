@@ -28,6 +28,8 @@ export interface GuardSubmitResponse {
 export default function Guard() {
     const [error, setError] = useState<string | null>(null);
     const [guardInfo, setGuardInfo] = useState<GuardSubmitResponse[]>([])
+    console.log(guardInfo);
+    
     // const [selectedInfo, setSelectedInfo] = useState<DataType[]>([]); // 用于管理选中行的状态
 
 

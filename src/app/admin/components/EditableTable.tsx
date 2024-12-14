@@ -4,7 +4,8 @@ import { Button, Form, Input, Popconfirm, Table } from 'antd';
 
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
-const EditableContext = React.createContext<FormInstance<any> | null>(null);
+
+const EditableContext = React.createContext<FormInstance<Item> | null>(null);
 
 interface Item {
     key: string;
@@ -18,6 +19,7 @@ interface EditableRowProps {
 }
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+    console.log(index);
     const [form] = Form.useForm();
     return (
         <Form form={form} component={false}>
