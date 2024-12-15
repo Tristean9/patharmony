@@ -15,7 +15,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
     const [mapAPIKey, setMapAPIKey] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>({ latitude: 9.9042, longitude: 116.4074 });
+    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>({ latitude: 39.9042, longitude: 116.4074 });
 
     const handlePositionChange = (newPosition: string) => {
         if (setCurrentPosition) {
