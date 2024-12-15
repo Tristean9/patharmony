@@ -11,7 +11,7 @@ interface MapContainerProps {
 
 
 const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
-    // const [map, setMap] = useState<ExtendedMap | null>(null);
+
     const [mapAPIKey, setMapAPIKey] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
                     });
-                    console.log("当前位置:", `${position.coords.longitude},${position.coords.latitude}`);
+                    // console.log("当前位置:", `${position.coords.longitude},${position.coords.latitude}`);
 
                     handlePositionChange(`${position.coords.longitude},${position.coords.latitude}`);
                     setError(null);
@@ -48,18 +48,15 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     const fetchAPIKey = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/session/locationMap`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_BASE_URL}/api/session/locationMap`, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             const { apikey } = response.data;
-            console.log("获取到的高德地图API秘钥:", apikey);
 
             setMapAPIKey(apikey);
         } catch (error) {
-            // 暂时增加，之后删除
-            setMapAPIKey(process.env.NEXT_PUBLIC_AMAP_API_KEY as string);
             setError(axios.isAxiosError(error) ? error.response?.data?.error : "获取高德地图API秘钥失败");
         } finally {
             setLoading(false);
@@ -80,6 +77,11 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
         }
 
         try {
+            // window._AMapSecurityConfig = {
+            //     serviceHost: "你的代理服务器域名或地址/_AMapService",
+            //     //例如 ：serviceHost:'http://1.1.1.1:80/_AMapService',
+            //   };
+
             const AMap = await AMapLoader.load({
                 key: mapAPIKey,
                 version: "2.0",
@@ -122,7 +124,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     // 重新定位，并设置地图中心点
     const handleReposition = async () => {
-        await getLocation();
+        getLocation();
         loadMap();
     };
 

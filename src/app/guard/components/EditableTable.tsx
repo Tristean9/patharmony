@@ -55,7 +55,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     ...restProps
 }) => {
     console.log(record, index);
-    
+
     const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
 
     return (

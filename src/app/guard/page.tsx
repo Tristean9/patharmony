@@ -5,7 +5,9 @@ import { Result } from "antd";
 import EditableTable from "./components/EditableTable";
 import { VehicleType } from "@/types";
 import { getCurrentDate } from "@/utils";
+import dynamic from 'next/dynamic';
 
+const MapContainer = dynamic(() => import('./components/MapContainer'), { ssr: false });
 
 export interface GuardSubmitParams {
     dateRange: string
@@ -29,7 +31,8 @@ export default function Guard() {
     const [error, setError] = useState<string | null>(null);
     const [guardInfo, setGuardInfo] = useState<GuardSubmitResponse[]>([])
     console.log(guardInfo);
-    
+
+
     // const [selectedInfo, setSelectedInfo] = useState<DataType[]>([]); // 用于管理选中行的状态
 
 
@@ -69,6 +72,7 @@ export default function Guard() {
 
     return (
         <div>
+            <MapContainer />
             {showError()}
             <EditableTable />
         </div>
