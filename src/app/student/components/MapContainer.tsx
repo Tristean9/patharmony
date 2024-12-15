@@ -15,7 +15,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
     const [mapAPIKey, setMapAPIKey] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
+    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>({ latitude: 9.9042, longitude: 116.4074 });
 
     const handlePositionChange = (newPosition: string) => {
         if (setCurrentPosition) {
@@ -48,7 +48,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     const fetchAPIKey = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_BASE_URL}/api/session/locationMap`, {
+            const response = await axios.get(`/api/session/locationMap`, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
