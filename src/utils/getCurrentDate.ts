@@ -1,11 +1,13 @@
 // 获取当前日期时间（UTC）
 export function getCurrentDate() {
-    const date = new Date();
-    const year = date.getUTCFullYear();
-    const month = date.getUTCMonth() + 1;
-    const day = date.getUTCDate();
-    const hour = date.getUTCHours();
-    const minute = date.getUTCMinutes();
-    const second = date.getUTCSeconds();
-    return `${year}-${month}-${day}-${hour}-${minute}-${second}`;
+	const now = new Date();
+
+	const year = now.getFullYear();
+	const month = ("0" + (now.getMonth() + 1)).slice(-2);
+	const day = ("0" + now.getDate()).slice(-2);
+	const hours = ("0" + now.getHours()).slice(-2);
+	const minutes = ("0" + now.getMinutes()).slice(-2);
+	const seconds = ("0" + now.getSeconds()).slice(-2);
+
+	return `${year}-${month}-${day}T${hours}-${minutes}-${seconds}`;
 }

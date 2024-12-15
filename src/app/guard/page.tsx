@@ -14,8 +14,7 @@ export interface GuardSubmitParams {
     handled: boolean
 }
 
-
-export interface GuardSubmitResponse {
+export interface ReportData {
     reportId: string
     vehicleType: VehicleType
     plateNumber: string
@@ -23,15 +22,19 @@ export interface GuardSubmitResponse {
     guardRemark: string
     location: string
     confirmed: boolean
-    handled: boolean
+    processed: boolean
+}
+
+export interface GuardSubmitResponse {
+    success: boolean;
+    message: string;
+    data: ReportData[]
 }
 
 
 export default function Guard() {
     const [error, setError] = useState<string | null>(null);
-    const [guardInfo, setGuardInfo] = useState<GuardSubmitResponse[]>([])
-    console.log(guardInfo);
-
+    const [reportData, setReportData] = useState<ReportData[]>([])
 
     // const [selectedInfo, setSelectedInfo] = useState<DataType[]>([]); // 用于管理选中行的状态
 
@@ -39,16 +42,18 @@ export default function Guard() {
     useEffect(() => {
         const fetchGuardInfo = async () => {
             try {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/session/report/getReportList`, {
-                    date: getCurrentDate(),
-                    handled: false,
-                    dateFrom: '00:00:00',
-                    dateEnd: '23:59:59'
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/getReportList`, {
+                    params: {
+                        date: getCurrentDate(),
+                        processed: false,
+                        dateFrom: '00:00:00',
+                        dateEnd: '23:59:59'
+                    }
                 })
-                const { data } = response
+                const { data } = response.data
                 console.log(data);
 
-                setGuardInfo(data)
+                setReportData(data)
 
             } catch (error) {
                 setError(axios.isAxiosError(error) ? error.response?.data?.error : "获取今日违停信息失败");
@@ -72,9 +77,10 @@ export default function Guard() {
 
     return (
         <div>
-            <MapContainer />
+            
             {showError()}
-            <EditableTable />
+            <EditableTable reportData={reportData} />
+            <MapContainer />
         </div>
     )
 };

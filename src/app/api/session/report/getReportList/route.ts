@@ -1,4 +1,4 @@
-export async function POST(request: Request) {
+export async function GET(request: Request) {
 	console.log(request.body);
 
 	return Response.json({
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 				processed: false,
 			},
 			{
-				reportId: "675e6a528f2e14509483a037",
+				reportId: "675e6a528f2e14ee9483a037",
 				vehicleType: "自行车",
                 plate_number: "",
                 remark: "",
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 				processed: false,
 			},
 			{
-				reportId: "675e6a528f2e14509483a037",
+				reportId: "675e6a528f2e85509483a037",
 				vehicleType: "自行车",
                 plate_number: "",
                 remark: "",

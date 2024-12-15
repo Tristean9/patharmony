@@ -35,7 +35,7 @@ export default function MapContainer() {
 
             <div
                 id="container"
-                style={{ height: "800px" }}
+                style={{ height: "350px" }}
             ></div>
         </div>
     );
