@@ -120,25 +120,25 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData }) => {
         {
             title: '车辆类型',
             dataIndex: 'vehicleType',
-            width: '10%',
+            width: '8%',
             editable: false,
         },
         {
             title: '车牌号',
             dataIndex: 'plateNumber',
-            width: '10%',
+            width: '8%',
             editable: false,
         },
         {
             title: '学生备注',
             dataIndex: 'remark',
-            width: '15%',
+            width: '19%',
             editable: false,
         },
         {
             title: '保安员备注',
             dataIndex: 'guardRemark',
-            width: '15%',
+            width: '19%',
             editable: false,
         },
         {
@@ -148,22 +148,23 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData }) => {
             editable: false,
         },
         {
-            title: '是否被核实',
+            title: '被核实',
             dataIndex: 'confirmed',
-            width: '10%',
+            width: '5%',
             editable: true,
             render: (index: number, record: ReportData) => <span>{index} {record.confirmed ? '是' : '否'}</span>
         },
         {
-            title: '是否被处理',
+            title: '被处理',
             dataIndex: 'processed',
-            width: '10%',
+            width: '5%',
             editable: false,
             render: (index: number, record: ReportData) => <span>{index} {record.processed ? '是' : '否'}</span>
         },
         {
             title: '操作',
             dataIndex: 'operation',
+            width: '10%',
             render: (index: number, record: ReportData) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -171,7 +172,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData }) => {
                         <Typography.Link onClick={() => save(record.reportId)} style={{ marginInlineEnd: 8 }}>
                             保存
                         </Typography.Link>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+                        <Popconfirm title="确定取消?" onConfirm={cancel}>
                             <a>取消</a>
                         </Popconfirm>
                     </span>
@@ -212,23 +213,25 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData }) => {
     };
 
     return (
-        <Form form={form} component={false}>
-            <Table<ReportData>
-                components={{
-                    body: { cell: EditableCell },
-                }}
-                rowSelection={{
-                    type: 'checkbox',
-                    ...rowSelection,
-                }}
-                bordered
-                dataSource={data}
-                columns={mergedColumns}
-                rowKey="reportId"
-                rowClassName="editable-row"
-                pagination={{ onChange: cancel }}
-            />
-        </Form>
+        <div className=' mx-auto px-2'>
+            <Form form={form} component={false}>
+                <Table<ReportData>
+                    components={{
+                        body: { cell: EditableCell },
+                    }}
+                    rowSelection={{
+                        type: 'checkbox',
+                        ...rowSelection,
+                    }}
+                    bordered
+                    dataSource={data}
+                    columns={mergedColumns}
+                    rowKey="reportId"
+                    rowClassName="editable-row"
+                    pagination={{ onChange: cancel }}
+                />
+            </Form>
+        </div>
     );
 };
 
