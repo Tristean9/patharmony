@@ -34,7 +34,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
                     });
                     // console.log("当前位置:", `${position.coords.longitude},${position.coords.latitude}`);
 
-                    handlePositionChange(`${position.coords.longitude},${position.coords.latitude}`);
+                    handlePositionChange(`${position.coords.latitude}°,${position.coords.longitude}°`);
                     setError(null);
                 },
                 (err) => {

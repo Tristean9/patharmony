@@ -43,6 +43,8 @@ const  InfoForm: React.FC<InfoFormProps> = ({ location }) => {
         console.log("Submitting:", submitValues);
 
         try {
+            console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`);
+
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`, submitValues, {
                 headers: {
                     'Content-Type': 'application/json'

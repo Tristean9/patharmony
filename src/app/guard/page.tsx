@@ -39,7 +39,7 @@ export default function Guard() {
     useEffect(() => {
         const fetchGuardInfo = async () => {
             try {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/session/reports/getReportList`, {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/session/report/getReportList`, {
                     date: getCurrentDate(),
                     handled: false,
                     dateFrom: '00:00:00',

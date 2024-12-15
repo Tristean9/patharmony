@@ -16,7 +16,7 @@ export default function MapContainer() {
             .then((AMap) => {
                 map = new AMap.Map("container", {
                     // 设置地图容器id
-                    viewMode: "3D", // 是否为3D地图模式
+                    viewMode: "2D", // 是否为2D地图模式
                     zoom: 11, // 初始化地图级别
                     center: [116.397428, 39.90923], // 初始化地图中心点位置
                 });
