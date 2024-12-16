@@ -61,16 +61,17 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
 interface EditableTableProps {
     reportData: ReportData[]
+    handleSelectedLocation: (selectedData: string[]) => void
 }
 
-const EditableTable: React.FC<EditableTableProps> = ({ reportData }) => {
+const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelectedLocation }) => {
     const [form] = Form.useForm();
     const [data, setData] = useState<ReportData[]>(reportData);
 
     // 使用 useEffect 来更新 data
     useEffect(() => {
         setData(reportData);
-    }, [reportData]); // 依赖 reportData，当它变化时更新 data
+    }, [reportData]); 
 
 
     const [editingKey, setEditingKey] = useState('');
@@ -202,9 +203,15 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData }) => {
     });
 
     const rowSelection: TableProps<ReportData>['rowSelection'] = {
-        onChange: (newSelectedInfo: React.Key[], selectedRows: ReportData[]) => {
-            // setSelectedInfo(selectedRows); // 更新选中状
+        onChange: (newSelectedData: React.Key[], selectedRows: ReportData[]) => {
+            // setSelectedData(selectedRows); // 更新选中状
             console.log('selectedRows: ', selectedRows);
+            // 提取被选中的数据的位置
+            const selectedLoaction = selectedRows.map(item => item.location);
+            
+            handleSelectedLocation(selectedLoaction);
+            // 传递给父组件
+
         },
         getCheckboxProps: (record: ReportData) => ({
             name: record.reportId,

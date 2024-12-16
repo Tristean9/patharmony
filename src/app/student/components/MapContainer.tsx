@@ -4,6 +4,7 @@ import AMapLoader from "@amap/amap-jsapi-loader";
 import "@amap/amap-jsapi-types";
 import { Button } from "antd";
 import axios from "axios";
+import { MyLocation } from "@/types";
 
 interface MapContainerProps {
     setCurrentPosition: (position: string) => void;
@@ -15,7 +16,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
     const [mapAPIKey, setMapAPIKey] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>({ latitude: 39.9042, longitude: 116.4074 });
+    const [location, setLocation] = useState<MyLocation>({ latitude: 39.9042, longitude: 116.4074 });
 
     const handlePositionChange = (newPosition: string) => {
         if (setCurrentPosition) {

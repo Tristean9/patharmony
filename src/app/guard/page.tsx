@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Result } from "antd";
+import { Button, Result } from "antd";
 import EditableTable from "./components/EditableTable";
 import { VehicleType } from "@/types";
 import { getCurrentDate } from "@/utils";
@@ -36,8 +36,8 @@ export default function Guard() {
     const [error, setError] = useState<string | null>(null);
     const [reportData, setReportData] = useState<ReportData[]>([])
 
-    // const [selectedInfo, setSelectedInfo] = useState<DataType[]>([]); // 用于管理选中行的状态
-
+    const [selectedLocation, setSelectedLocation] = useState<string[]>([]); // 用于收到表格组件传递的数据
+    const [locationsData, setLocationsData] = useState<string[]>([]); // 用于给地图组件传递数据
 
     useEffect(() => {
         const fetchGuardInfo = async () => {
@@ -74,13 +74,25 @@ export default function Guard() {
         }
     };
 
+    // 给子组件调用的方法
+    const handleSelectedLocation = (selectedLocation: string[]) => {
+        console.log('表格组件传递过来的数据');
+        
+        console.log(selectedLocation);
+        setSelectedLocation(selectedLocation)
+    }
 
+    const handleLocationAddMarker = () => {
+        setLocationsData(selectedLocation)
+    }
+        
     return (
         <div>
-            
+
             {showError()}
-            <EditableTable reportData={reportData} />
-            <MapContainer />
+            <EditableTable reportData={reportData} handleSelectedLocation={handleSelectedLocation} />
+            <Button onClick={handleLocationAddMarker}>将选中的记录显示在地图上</Button>
+            <MapContainer locationsData={locationsData} />
         </div>
     )
 };
