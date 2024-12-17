@@ -18,7 +18,6 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     editing,
     dataIndex,
-    title,
     inputType,
     children,
     ...restProps
@@ -31,7 +30,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     }
     // 如果是 “是否被核实字段”
     else if (dataIndex === 'confirmed') {
-        inputNode = <Select options={[{ value: false, label: <span>否</span> }, { value: true, label: <span>是</span> }]} />
+        inputNode = <Select defaultValue="false" options={[{ value: false, label: <span>否</span> }, { value: true, label: <span>是</span> }]} />
     }
     else {
         inputNode = <Input />
@@ -43,12 +42,6 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 <Form.Item
                     name={dataIndex}
                     style={{ margin: 0 }}
-                    rules={[
-                        {
-                            required: true,
-                            message: `Please Input ${title}!`,
-                        },
-                    ]}
                 >
                     {inputNode}
                 </Form.Item>
@@ -90,6 +83,10 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
     const save = async (reportId: string) => {
         try {
             const row = (await form.validateFields()) as ReportData;
+            // 重置表单
+            form.resetFields() 
+            console.log('row: ', row);
+            
             const newData = [...data];
             const index = newData.findIndex((item) => reportId === item.reportId);
             if (index > -1) {
@@ -139,15 +136,21 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
         {
             title: '保安员备注',
             dataIndex: 'guardRemark',
-            width: '19%',
+            width: '15%',
             editable: false,
         },
         {
-            title: '位置',
-            dataIndex: 'location',
-            width: '10%',
-            editable: false,
+            title: '增加备注(可选，非必需)',
+            dataIndex: 'addRemark',
+            width: '15%',
+            editable: true,
         },
+        // {
+        //     title: '位置',
+        //     dataIndex: 'location',
+        //     width: '10%',
+        //     editable: false,
+        // },
         {
             title: '被核实',
             dataIndex: 'confirmed',
@@ -165,7 +168,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
         {
             title: '操作',
             dataIndex: 'operation',
-            width: '10%',
+            width: '5%',
             render: (index: number, record: ReportData) => {
                 const editable = isEditing(record);
                 return editable ? (
