@@ -12,9 +12,9 @@ export default function Student() {
 
 
     return (
-        <div> 
+        <div>
             <MapContainer setCurrentPosition={setCurrentPosition} />
-            <InfoForm  location={currentPosition} />
+            <InfoForm location={currentPosition} />
             <Notice />
         </div>
     );

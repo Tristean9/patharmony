@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import "@amap/amap-jsapi-types";
 import axios from "axios";
-import { MyLocation } from "@/types";
+import { MyPosition } from "@/types";
 
 interface MapContainerProps {
     locationsData: string[]
@@ -13,12 +13,12 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
     const [mapAPIKey, setMapAPIKey] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [locations, setLocations] = useState<MyLocation[]>([])
+    const [locations, setLocations] = useState<MyPosition[]>([])
 
     useEffect(() => {
         console.log('page组件传递过来的数据');
         console.log(locationsData);
-        
+
         // 将locationsData的字符串数组 转换成 经纬度的对象
         const formatData = locationsData.map(item => {
             const [latitudeStr, longitudeStr] = item.split(',')
@@ -27,7 +27,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
                 latitude: parseFloat(latitudeStr.slice(0, latitudeStr.length - 1)),
             }
         })
-        
+
         setLocations(formatData)
         console.log('格式化后的数据');
         console.log(formatData);
@@ -76,15 +76,15 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
             const initializedMap = new AMap.Map("map-container", {
                 viewMode: "2D",
                 zoom: 11,
-                center: [116.308303,39.988792], // 初始中心点
+                center: [116.308303, 39.988792], // 初始中心点
             });
 
             locations.forEach(location => {
-                console.log( [location?.longitude, location?.latitude]);
-                
+                console.log([location?.longitude, location?.latitude]);
+
                 //创建一个 Marker 实例：
                 const marker = new AMap.Marker({
-                    position: [location?.longitude, location?.latitude], 
+                    position: [location?.longitude, location?.latitude],
                     title: "当前位置",
                 });
                 //将创建的点标记添加到已有的地图实例：

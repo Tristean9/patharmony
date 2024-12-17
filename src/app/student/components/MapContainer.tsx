@@ -2,73 +2,30 @@
 import { useEffect, useState } from "react";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import "@amap/amap-jsapi-types";
-import { Button } from "antd";
-import axios from "axios";
-import { MyLocation } from "@/types";
+import { MyPosition } from "@/types";
+import { Alert, Typography } from 'antd';
+import { getLocation } from "@/utils/getLocation";
+import { fetchMapAPIKey } from "@/utils/fetchMapAPIKey";
 
 interface MapContainerProps {
     setCurrentPosition: (position: string) => void;
 }
 
+const onClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    console.log(e, 'I was closed.');
+};
+
 
 const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
-    const [mapAPIKey, setMapAPIKey] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [location, setLocation] = useState<MyLocation>({ latitude: 39.9042, longitude: 116.4074 });
-
-    const handlePositionChange = (newPosition: string) => {
-        if (setCurrentPosition) {
-            setCurrentPosition(newPosition);
-        }
-    };
-
-    // 获取当前定位
-    const getLocation = () => {
-        if (typeof window !== "undefined" && navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setLocation({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    });
-                    // console.log("当前位置:", `${position.coords.longitude},${position.coords.latitude}`);
-
-                    handlePositionChange(`${position.coords.latitude}°,${position.coords.longitude}°`);
-                    setError(null);
-                },
-                (err) => {
-                    setError(err.message);
-                }
-            );
-        } else {
-            setError('Geolocation is not supported by this browser.');
-        }
-    };
-
-    const fetchAPIKey = async () => {
-        try {
-            const response = await axios.get(`/api/session/locationMap`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const { apikey } = response.data;
-
-            setMapAPIKey(apikey);
-        } catch (error) {
-            setError(axios.isAxiosError(error) ? error.response?.data?.error : "获取高德地图API秘钥失败");
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    const [loading, setLoading] = useState<boolean>(true);
+    const [, setPosition] = useState<MyPosition | null>(null);
 
     // 加载地图
-    const loadMap = async () => {
+    const loadMap = async (mapAPIKey: string, initialPosition: MyPosition | null) => {
 
-        if (!mapAPIKey || !location) {
+        if (!mapAPIKey || !initialPosition) {
             return
         }
 
@@ -90,56 +47,79 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
             })
             const initializedMap = new AMap.Map("map-container", {
                 viewMode: "2D",
-                zoom: 11,
-                center: [location?.longitude, location?.latitude], // 初始中心点
+                zoom: 18,
+                center: [initialPosition.longitude, initialPosition.latitude], // 初始中心点
             });
 
             //创建一个 Marker 实例：
-            const marker = new AMap.Marker({
-                position: [location?.longitude, location?.latitude], //经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+            const initializedMarker = new AMap.Marker({
+                position: [initialPosition.longitude, initialPosition.latitude], //经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
                 title: "当前位置",
+                draggable: true,
             });
+
+            updatePosition(initialPosition)
+
             //将创建的点标记添加到已有的地图实例：
-            initializedMap.add(marker);
-            initializedMap.setZoom(18);
+            initializedMap.add(initializedMarker);
+
+
+            // 给 marker 添加事件监听，拖拽后更新位置
+            initializedMarker.on("dragend", function () {
+                console.log("dragend", initializedMarker._position);
+                const newPosition = {
+                    latitude: initializedMarker._position[1],
+                    longitude: initializedMarker._position[0],
+                };
+                updatePosition(newPosition)
+            });
 
         } catch (error) {
             console.log(error);
         }
     }
 
+    const updatePosition = (newPosition: MyPosition) => {
+        setPosition(newPosition);
+        setCurrentPosition(`${newPosition.longitude}°,${newPosition.latitude}°`);
+    }
+
     useEffect(() => {
         // 初始化, 获取地图秘钥，获取当前位置
         const initialize = async () => {
-            await fetchAPIKey();
-            await getLocation();
+            const { mapAPIKey, loading, error: mapError } = await fetchMapAPIKey();
+            setLoading(loading);
+            setError(mapError);
+            const { position, error: locationError } = await getLocation()
+            setError(locationError);
+            loadMap(mapAPIKey, position);
         }
         initialize()
     }, []);
 
-    // 当地图秘钥和位置发生变化时，重新加载地图
-    useEffect(() => {
-        loadMap();
-    }, [mapAPIKey, location]);
 
-
-    // 重新定位，并设置地图中心点
-    const handleReposition = async () => {
-        getLocation();
-        loadMap();
-    };
 
     if (loading) return <div>Loading API key...</div>;
-    if (error) return <div>Error: {error}</div>;
+
+    if (error) {
+        return (
+            <Alert
+                message={error}
+                type="warning"
+                closable
+                onClose={onClose}
+            />
+        )
+    }
 
     return (
         <div>
+            <Typography.Title level={5}>请拖拽地图或移动标记，获取您想提交的违停精确位置</Typography.Title>
             <div
                 id="map-container"
                 className={"map-container"}
                 style={{ height: "350px" }}
             ></div>
-            <Button onClick={handleReposition}>重新定位</Button>
         </div>
     );
 };

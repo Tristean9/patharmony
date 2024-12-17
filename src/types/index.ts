@@ -1,2 +1,2 @@
 export * from './vehicleType';
-export * from './location'
+export * from './position'
