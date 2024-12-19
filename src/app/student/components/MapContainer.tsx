@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import "@amap/amap-jsapi-types";
 import { MyPosition } from "@/types";
@@ -11,10 +11,6 @@ interface MapContainerProps {
     setCurrentPosition: (position: string) => void;
 }
 
-const onClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log(e, 'I was closed.');
-};
-
 
 const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
@@ -22,9 +18,13 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [, setPosition] = useState<MyPosition | null>(null);
 
-    // 加载地图
-    const loadMap = async (mapAPIKey: string, initialPosition: MyPosition | null) => {
+    const updatePosition = useCallback((newPosition: MyPosition) => {
+        setPosition(newPosition);
+        setCurrentPosition(`${newPosition.longitude}°,${newPosition.latitude}°`);
+    }, [setCurrentPosition, setPosition])
 
+    // 加载地图
+    const loadMap = useCallback(async (mapAPIKey: string, initialPosition: MyPosition | null) => {
         if (!mapAPIKey || !initialPosition) {
             return
         }
@@ -52,7 +52,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
             });
 
             //创建一个 Marker 实例：
-            const initializedMarker = new AMap.Marker({
+            const marker: AMap.Marker = new AMap.Marker({
                 position: [initialPosition.longitude, initialPosition.latitude], //经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
                 title: "当前位置",
                 draggable: true,
@@ -61,15 +61,15 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
             updatePosition(initialPosition)
 
             //将创建的点标记添加到已有的地图实例：
-            initializedMap.add(initializedMarker);
-
+            initializedMap.add(marker);
 
             // 给 marker 添加事件监听，拖拽后更新位置
-            initializedMarker.on("dragend", function () {
-                console.log("dragend", initializedMarker._position);
+            marker.on("dragend", function () {
+                const markerPos = marker.getPosition() as AMap.LngLat
+                console.log("dragend", markerPos);
                 const newPosition = {
-                    latitude: initializedMarker._position[1],
-                    longitude: initializedMarker._position[0],
+                    latitude: markerPos.getLat(),
+                    longitude: markerPos.getLng(),
                 };
                 updatePosition(newPosition)
             });
@@ -77,12 +77,8 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
         } catch (error) {
             console.log(error);
         }
-    }
+    }, [updatePosition])
 
-    const updatePosition = (newPosition: MyPosition) => {
-        setPosition(newPosition);
-        setCurrentPosition(`${newPosition.longitude}°,${newPosition.latitude}°`);
-    }
 
     useEffect(() => {
         // 初始化, 获取地图秘钥，获取当前位置
@@ -95,8 +91,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
             loadMap(mapAPIKey, position);
         }
         initialize()
-    }, []);
-
+    }, [loadMap, updatePosition, setError, setLoading]);
 
 
     if (loading) return <div>Loading API key...</div>;
@@ -107,7 +102,6 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
                 message={error}
                 type="warning"
                 closable
-                onClose={onClose}
             />
         )
     }

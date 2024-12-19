@@ -51,10 +51,7 @@ export default function Guard() {
                     }
                 })
                 const { data } = response.data
-                console.log(data);
-
                 setReportData(data)
-
             } catch (error) {
                 setError(axios.isAxiosError(error) ? error.response?.data?.error : "获取今日违停信息失败");
             }
@@ -76,9 +73,6 @@ export default function Guard() {
 
     // 给子组件调用的方法
     const handleSelectedLocation = (selectedLocation: string[]) => {
-        console.log('表格组件传递过来的数据');
-        
-        console.log(selectedLocation);
         setSelectedLocation(selectedLocation)
     }
 

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import "@amap/amap-jsapi-types";
-import axios from "axios";
 import { MyPosition } from "@/types";
+import { fetchMapAPIKey } from "@/utils/fetchMapAPIKey";
+import { Alert } from "antd";
 
 interface MapContainerProps {
     locationsData: string[]
@@ -10,49 +11,53 @@ interface MapContainerProps {
 
 const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
 
-    const [mapAPIKey, setMapAPIKey] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [locations, setLocations] = useState<MyPosition[]>([])
+    const markersRef = useRef<AMap.Marker[]>([])
+    const map = useRef(null)
 
-    useEffect(() => {
-        console.log('page组件传递过来的数据');
-        console.log(locationsData);
+    // 将被选中的位置添加到地图上
+    const updateMarkers = useCallback((positions: MyPosition[]) => {
+        if (!map.current) {
+            return
+        }
+        // 使用断言来避免类型检查错误
+        const mapInstance = map.current as AMap.Map
 
-        // 将locationsData的字符串数组 转换成 经纬度的对象
-        const formatData = locationsData.map(item => {
-            const [latitudeStr, longitudeStr] = item.split(',')
-            return {
-                longitude: parseFloat(longitudeStr.slice(0, longitudeStr.length - 1)),
-                latitude: parseFloat(latitudeStr.slice(0, latitudeStr.length - 1)),
+        const newSet = new Set(positions.map(pos => `${pos.latitude},${pos.longitude}`))
+
+        // 移除不在新数据中的标记
+        markersRef.current = markersRef.current.filter(marker => {
+            const markerPos = marker.getPosition() as AMap.LngLat
+            const key = `${markerPos.getLat()},${markerPos.getLng()}`
+            if (!newSet.has(key)) {
+                marker.remove()
+                return false
             }
+            return true
         })
 
-        setLocations(formatData)
-        console.log('格式化后的数据');
-        console.log(formatData);
-    }, [locationsData])
-
-    const fetchAPIKey = async () => {
-        try {
-            const response = await axios.get(`/api/session/locationMap`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const { apikey } = response.data;
-
-            setMapAPIKey(apikey);
-        } catch (error) {
-            setError(axios.isAxiosError(error) ? error.response?.data?.error : "获取高德地图API秘钥失败");
-        } finally {
-            setLoading(false);
-        }
-    };
+        // 添加新的标记
+        positions.forEach(position => {
+            const key = `${position.latitude},${position.longitude}`
+            const exists = markersRef.current.some(marker => {
+                const markerPos = marker.getPosition() as AMap.LngLat
+                return key === `${markerPos.getLat()},${markerPos.getLng()}`
+            })
+            if (!exists) {
+                const marker = new AMap.Marker({
+                    position: [position.longitude, position.latitude],
+                    title: "当前位置",
+                });
+                //将创建的点标记添加到已有的地图实例：
+                mapInstance.add(marker);
+                markersRef.current.push(marker)
+            }
+        })
+    }, []) 
 
     // 加载地图
-    const loadMap = async () => {
-
+    const loadMap = useCallback(async (mapAPIKey: string) => {
         if (!mapAPIKey || !location) {
             return
         }
@@ -75,50 +80,58 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
             })
             const initializedMap = new AMap.Map("map-container", {
                 viewMode: "2D",
-                zoom: 11,
+                zoom: 15,
                 center: [116.308303, 39.988792], // 初始中心点
             });
 
-            locations.forEach(location => {
-                console.log([location?.longitude, location?.latitude]);
-
-                //创建一个 Marker 实例：
-                const marker = new AMap.Marker({
-                    position: [location?.longitude, location?.latitude],
-                    title: "当前位置",
-                });
-                //将创建的点标记添加到已有的地图实例：
-                initializedMap.add(marker);
-            })
-
-            initializedMap.setZoom(18);
+            map.current = initializedMap
 
         } catch (error) {
             console.log(error);
         }
-    }
+    }, []) 
 
     useEffect(() => {
         // 初始化, 获取地图秘钥，获取当前位置
         const initialize = async () => {
-            await fetchAPIKey();
+            const { mapAPIKey, loading, error: mapError } = await fetchMapAPIKey();
+            setLoading(loading);
+            setError(mapError);
+            loadMap(mapAPIKey)
         }
         initialize()
-    }, []);
+    }, [setLoading, setError, loadMap]);
 
-    // 当地图秘钥和位置发生变化时，重新加载地图
     useEffect(() => {
-        loadMap();
-    }, [mapAPIKey, locations]);
+        // 将locationsData的字符串数组 转换成 经纬度的对象
+        const formatData = locationsData.map(item => {
+            const [latitudeStr, longitudeStr] = item.split(',')
+            return {
+                longitude: parseFloat(longitudeStr.slice(0, longitudeStr.length - 1)),
+                latitude: parseFloat(latitudeStr.slice(0, latitudeStr.length - 1)),
+            }
+        })
+        // 更新地图位置标记
+        updateMarkers(formatData)
+    }, [locationsData, updateMarkers])
+
 
     if (loading) return <div>Loading API key...</div>;
     if (error) return <div>Error: {error}</div>;
+    if (error) {
+        return (
+            <Alert
+                message={error}
+                type="warning"
+                closable
+            />
+        )
+    }
 
     return (
         <div>
-
-
             <div
+                ref={map}
                 id="map-container"
                 style={{ height: "500px" }}
             ></div>
