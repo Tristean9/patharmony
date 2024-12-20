@@ -1,10 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import type { TableProps } from 'antd';
-import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography } from 'antd';
+import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, } from 'antd';
 import { ReportData } from '../page';
-
-
+import { UpdateParam } from '@/types';
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -30,7 +29,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     }
     // 如果是 “是否被核实字段”
     else if (dataIndex === 'confirmed') {
-        inputNode = <Select defaultValue="false" options={[{ value: false, label: <span>否</span> }, { value: true, label: <span>是</span> }]} />
+        inputNode = <Select defaultValue={false} options={[{ value: false, label: <span>否</span> }, { value: true, label: <span>是</span> }]} />
     }
     else {
         inputNode = <Input />
@@ -55,16 +54,18 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 interface EditableTableProps {
     reportData: ReportData[]
     handleSelectedLocation: (selectedData: string[]) => void
+    handleSave: (report: UpdateParam) => void
 }
 
-const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelectedLocation }) => {
+const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelectedLocation, handleSave }) => {
     const [form] = Form.useForm();
     const [data, setData] = useState<ReportData[]>(reportData);
+
 
     // 使用 useEffect 来更新 data
     useEffect(() => {
         setData(reportData);
-    }, [reportData]); 
+    }, [reportData]);
 
 
     const [editingKey, setEditingKey] = useState('');
@@ -80,28 +81,39 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
         setEditingKey('');
     };
 
-    const save = async (reportId: string) => {
+    const save = async (report: ReportData) => {
         try {
-            const row = (await form.validateFields()) as ReportData;
-            // 重置表单
-            form.resetFields() 
+            const row = await form.validateFields();
             console.log('row: ', row);
-            
-            const newData = [...data];
-            const index = newData.findIndex((item) => reportId === item.reportId);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
+
+            // 重置表单
+            // form.resetFields() 
+            console.log('report: ', report);
+            const submitData = {
+                reportId: report.reportId,
+                confirmed: row.confirmed,
+                ...(row.addRemark && { remark: [row.addRemark.trim()] })
             }
+
+            console.log('submitData: ', submitData);
+            handleSave(submitData);
+
+
+            // const newData = [...data];
+            // const index = newData.findIndex((item) => reportId === item.reportId);
+            // if (index > -1) {
+            //     const item = newData[index];
+            //     newData.splice(index, 1, {
+            //         ...item,
+            //         ...row,
+            //     });
+            //     setData(newData);
+            //     setEditingKey('');
+            // } else {
+            //     newData.push(row);
+            //     setData(newData);
+            //     setEditingKey('');
+            // }
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
@@ -173,7 +185,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link onClick={() => save(record.reportId)} style={{ marginInlineEnd: 8 }}>
+                        <Typography.Link onClick={() => save(record)} style={{ marginInlineEnd: 8 }}>
                             保存
                         </Typography.Link>
                         <Popconfirm title="确定取消?" onConfirm={cancel}>
@@ -210,11 +222,9 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
             // setSelectedData(selectedRows); // 更新选中状
             console.log('selectedRows: ', selectedRows);
             // 提取被选中的数据的位置
-            const selectedLoaction = selectedRows.map(item => item.location);
-            
-            handleSelectedLocation(selectedLoaction);
+            const selectedLocation = selectedRows.map(item => item.location);
             // 传递给父组件
-
+            handleSelectedLocation(selectedLocation);
         },
         getCheckboxProps: (record: ReportData) => ({
             name: record.reportId,

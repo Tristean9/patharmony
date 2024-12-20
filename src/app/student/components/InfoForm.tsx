@@ -11,6 +11,7 @@ import {
 import type { FormProps } from "antd";
 import { useState } from "react";
 import axios from "axios";
+import { SubmitResponse } from "@/types";
 
 interface InfoFormProps {
     location: string
@@ -22,13 +23,6 @@ export interface StudentSubmitParams {
     remark?: string;
     location: string;
 }
-
-export interface StudentSubmitResponse {
-    success: boolean;
-    message: string;
-    error?: string;
-}
-
 
 const  InfoForm: React.FC<InfoFormProps> = ({ location }) => {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
@@ -45,8 +39,8 @@ const  InfoForm: React.FC<InfoFormProps> = ({ location }) => {
         try {
             console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`);
 
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`, submitValues);
-            const { success, message } = response.data as StudentSubmitResponse;
+            const response = await axios.post<SubmitResponse>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`, submitValues);
+            const { success, message } = response.data
             setSubmitSuccess(success);
             setSubmitError(!success);
             setSubmitMessage(message);
