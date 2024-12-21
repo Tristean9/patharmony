@@ -1,29 +1,25 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import AMapLoader from "@amap/amap-jsapi-loader";
+import { useCallback, useEffect, useRef } from "react";
 import "@amap/amap-jsapi-types";
 import { MyPosition } from "@/types";
-import { fetchMapAPIKey } from "@/utils/fetchMapAPIKey";
+import { useMap } from "@/hooks";
 import { Alert } from "antd";
 
 interface MapContainerProps {
+    mapAPIKey: string | null
     locationsData: string[]
 }
 
 const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
 
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
     const markersRef = useRef<AMap.Marker[]>([])
-    const map = useRef(null)
+    const { map, loading, error, mapLoaded } = useMap("map-container");
 
-    // 将被选中的位置添加到地图上
+
+    // 将被选中的位置更新到地图上
     const updateMarkers = useCallback((positions: MyPosition[]) => {
-        if (!map.current) {
-            return
+        if (typeof window === "undefined" || !mapLoaded) {
+            return;
         }
-        // 使用断言来避免类型检查错误
-        const mapInstance = map.current as AMap.Map
-
         const newSet = new Set(positions.map(pos => `${pos.latitude},${pos.longitude}`))
 
         // 移除不在新数据中的标记
@@ -49,58 +45,11 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
                     position: [position.longitude, position.latitude],
                     title: "当前位置",
                 });
-                //将创建的点标记添加到已有的地图实例：
-                mapInstance.add(marker);
+                (map.current as AMap.Map).add(marker);
                 markersRef.current.push(marker)
             }
         })
-    }, []) 
-
-    // 加载地图
-    const loadMap = useCallback(async (mapAPIKey: string) => {
-        if (!mapAPIKey || !location) {
-            return
-        }
-
-        // 检查 window是否可用
-        if (typeof window === "undefined") {
-            return;
-        }
-
-        try {
-            // window._AMapSecurityConfig = {
-            //     serviceHost: "你的代理服务器域名或地址/_AMapService",
-            //     //例如 ：serviceHost:'http://1.1.1.1:80/_AMapService',
-            //   };
-
-            const AMap = await AMapLoader.load({
-                key: mapAPIKey,
-                version: "2.0",
-                plugins: [],
-            })
-            const initializedMap = new AMap.Map("map-container", {
-                viewMode: "2D",
-                zoom: 15,
-                center: [116.308303, 39.988792], // 初始中心点
-            });
-
-            map.current = initializedMap
-
-        } catch (error) {
-            console.log(error);
-        }
-    }, []) 
-
-    useEffect(() => {
-        // 初始化, 获取地图秘钥，获取当前位置
-        const initialize = async () => {
-            const { mapAPIKey, loading, error: mapError } = await fetchMapAPIKey();
-            setLoading(loading);
-            setError(mapError);
-            loadMap(mapAPIKey)
-        }
-        initialize()
-    }, [setLoading, setError, loadMap]);
+    }, [map, mapLoaded])
 
     useEffect(() => {
         // 将locationsData的字符串数组 转换成 经纬度的对象
@@ -111,27 +60,18 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
                 latitude: parseFloat(latitudeStr.slice(0, latitudeStr.length - 1)),
             }
         })
-        // 更新地图位置标记
         updateMarkers(formatData)
     }, [locationsData, updateMarkers])
 
-
-    if (loading) return <div>Loading API key...</div>;
-    if (error) return <div>Error: {error}</div>;
-    if (error) {
-        return (
-            <Alert
-                message={error}
-                type="warning"
-                closable
-            />
-        )
+    if (loading) {
+        return <div>loading...</div>
     }
-
+    if (error) {
+        return <Alert message="Error" description={error} type="error" showIcon />
+    }
     return (
         <div>
             <div
-                ref={map}
                 id="map-container"
                 style={{ height: "500px" }}
             ></div>

@@ -7,6 +7,7 @@ export default function Home() {
             <nav>
                 <Link href={"/student"}>学生页面</Link>
                 <Link href={"/guard"}>保安页面</Link>
+                <Link href={"/admin"}>管理员页面</Link>
             </nav>
         </div>
     );

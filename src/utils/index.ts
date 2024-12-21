@@ -1,1 +1,2 @@
-export * from './getCurrentDate'
+export * from "./getCurrentDate";
+export * from "./getCurrentLocation";

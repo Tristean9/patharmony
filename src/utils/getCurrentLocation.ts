@@ -6,8 +6,8 @@ interface GetLocationResult {
 }
 
 // 获取当前定位
-export const getLocation = (): Promise<GetLocationResult> => {
-	return new Promise((resolve) => {
+export const getCurrentLocation = (): Promise<GetLocationResult> => {
+	return new Promise((resolve, reject) => {
 		if (typeof window !== "undefined" && navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
@@ -20,11 +20,11 @@ export const getLocation = (): Promise<GetLocationResult> => {
 					});
 				},
 				(err) => {
-					resolve({ error: err.message, position: null });
+					reject({ error: err.message, position: null });
 				}
 			);
 		} else {
-			resolve({
+			reject({
 				position: null,
 				error: "Geolocation is not supported by this browser.",
 			});
