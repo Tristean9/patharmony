@@ -1,56 +1,11 @@
-'use client'
 import React, { useEffect, useState } from 'react';
 import type { TableProps } from 'antd';
-import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, } from 'antd';
+import { Form, Popconfirm, Table, Typography, } from 'antd';
 import { ReportData, UpdateParam } from '@/types';
 import { useViolationInfo } from '@/hooks';
 import dayjs from 'dayjs';
+import EditableCell from './EditableCell';
 
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-    editing: boolean;
-    dataIndex: string;
-    title: string;
-    inputType: 'number' | 'text';
-    record: ReportData;
-    index: number;
-}
-
-const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
-    editing,
-    dataIndex,
-    inputType,
-    children,
-    ...restProps
-}) => {
-
-    let inputNode
-
-    if (inputType === 'number') {
-        inputNode = <InputNumber />
-    }
-    // 如果是 “是否被核实字段”
-    else if (dataIndex === 'confirmed') {
-        inputNode = <Select defaultValue={false} options={[{ value: false, label: <span>否</span> }, { value: true, label: <span>是</span> }]} />
-    }
-    else {
-        inputNode = <Input />
-    }
-
-    return (
-        <td {...restProps}>
-            {editing ? (
-                <Form.Item
-                    name={dataIndex}
-                    style={{ margin: 0 }}
-                >
-                    {inputNode}
-                </Form.Item>
-            ) : (
-                children
-            )}
-        </td>
-    );
-};
 
 interface EditableTableProps {
     handleSelectedLocation: (selectedData: string[]) => void
@@ -64,8 +19,6 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
     const [data, setData] = useState<ReportData[]>(reportData);
 
     useEffect(() => {
-        console.log('表格组件获取了数据', reportData);
-
         setData(reportData);
     }, [reportData]);
 
@@ -85,18 +38,12 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
     const save = async (report: ReportData) => {
         try {
             const row = await form.validateFields();
-            console.log('row: ', row);
-
-            // 重置表单
-            // form.resetFields() 
-            console.log('report: ', report);
             const submitData: UpdateParam = {
                 reportId: report.reportId,
                 confirmed: row.confirmed,
                 ...(row.addRemark && { guardRemark: [row.addRemark.trim()] })
             }
 
-            console.log('submitData: ', submitData);
             await updateData(submitData);
             // 重置表单
             form.resetFields();
@@ -108,7 +55,6 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
 
 
     const columns = [
-
         {
             title: '反馈信息ID',
             dataIndex: 'reportId',
@@ -212,8 +158,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
 
     const rowSelection: TableProps<ReportData>['rowSelection'] = {
         onChange: (newSelectedData: React.Key[], selectedRows: ReportData[]) => {
-            // setSelectedData(selectedRows); // 更新选中状
-            console.log('selectedRows: ', selectedRows);
+
             // 提取被选中的数据的位置
             const selectedLocation = selectedRows.map(item => item.location);
             // 传递给父组件

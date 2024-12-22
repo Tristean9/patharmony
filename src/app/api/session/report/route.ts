@@ -10,11 +10,8 @@ export async function POST(request: Request) {
 	const { vehicleType, plateNumber, remark, location } =
 		requestBody as StudentSubmitParams;
 
-	console.log("提交的违停信息:", requestBody);
-
 	// 验证输入信息
 	if (!vehicleType || !location) {
-		console.log("提交失败：信息不完整", requestBody);
 		return new Response(
 			JSON.stringify({
 				success: false,
@@ -25,10 +22,8 @@ export async function POST(request: Request) {
 		);
 	}
 
-	// 其他验证 (例如，车辆类型是否有效)
 	const validVehicleTypes = ["自行车", "电动车", "机动车"];
 	if (!validVehicleTypes.includes(vehicleType)) {
-		console.log("提交失败：车辆类型无效", requestBody);
 		return new Response(
 			JSON.stringify({
 				success: false,

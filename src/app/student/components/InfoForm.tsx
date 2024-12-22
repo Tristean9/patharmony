@@ -34,11 +34,8 @@ const  InfoForm: React.FC<InfoFormProps> = ({ location }) => {
     const onFinish: FormProps["onFinish"] = async (values) => {
 
         const submitValues: StudentSubmitParams = { ...values, location };
-        console.log("Submitting:", submitValues);
 
         try {
-            console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`);
-
             const response = await axios.post<SubmitResponse>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`, submitValues);
             const { success, message } = response.data
             setSubmitSuccess(success);

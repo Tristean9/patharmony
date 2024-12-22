@@ -25,8 +25,6 @@ export const useViolationInfo = ({
 
     const fetchData = useCallback(async () => {
         try {
-            console.log("发送获取数据请求");
-
             const response = await axios.get<ViolationSubmitResponse>(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/getReportList`,
                 {
@@ -40,7 +38,6 @@ export const useViolationInfo = ({
             const { data, success, message } = response.data;
             if (success && data) {
                 setReportData(data);
-                console.log("获取到的数据：", data);
             } else {
                 setError(message);
             }
