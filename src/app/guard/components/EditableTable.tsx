@@ -3,9 +3,8 @@ import type { TableProps } from 'antd';
 import { Form, Popconfirm, Table, Typography, } from 'antd';
 import { ReportData, UpdateParam } from '@/types';
 import { useViolationInfo } from '@/hooks';
-import dayjs from 'dayjs';
+import { getNow } from '@/utils';
 import EditableCell from './EditableCell';
-
 
 interface EditableTableProps {
     handleSelectedLocation: (selectedData: string[]) => void
@@ -14,7 +13,7 @@ interface EditableTableProps {
 const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation }) => {
     const [form] = Form.useForm();
 
-    const now = dayjs();
+    const now = getNow();
     const { reportData, error, loading, updateData } = useViolationInfo({ dateFrom: `${now.format('YYYY-MM-DD')}T00:00:00`, dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59`, processed: false });
     const [data, setData] = useState<ReportData[]>(reportData);
 

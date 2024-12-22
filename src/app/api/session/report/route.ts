@@ -2,7 +2,7 @@ import { StudentSubmitParams } from "@/app/student/components/InfoForm";
 import { updateReportData } from "@/mocks/tackleData";
 import { v4 as uuidv4 } from "uuid";
 import { VehicleType } from "@/types";
-import dayjs from 'dayjs';
+import { getNow } from "@/utils";
 
 export async function POST(request: Request) {
 	// 手动解析 JSON 请求体
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 		);
     }
     
-    const now = dayjs();
+    const now = getNow();
 
 	// 创建新的报告数据
 	const newReport = {

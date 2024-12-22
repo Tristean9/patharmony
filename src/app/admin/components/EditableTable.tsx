@@ -3,13 +3,13 @@ import type { TableProps } from 'antd';
 import { Form, Popconfirm, Table, Typography, Button } from 'antd';
 import { ReportData, UpdateParam } from '@/types';
 import { useViolationInfo } from '@/hooks';
-import dayjs from 'dayjs';
+import { getNow } from '@/utils';
 import EditableCell from './EditableCell';
 
 const EditableTable: React.FC = () => {
     const [form] = Form.useForm();
 
-    const now = dayjs();
+    const now = getNow();
     const { reportData, error, loading, updateData, deleteData } = useViolationInfo({ dateFrom: `2024-12-01T00:00:00`, dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59` });
     const [data, setData] = useState<ReportData[]>(reportData);
 
