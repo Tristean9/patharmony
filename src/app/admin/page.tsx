@@ -1,6 +1,6 @@
 'use client'
-import EditableTable from "./components/EditableTable";
-
+import dynamic from "next/dynamic";
+const EditableTable = dynamic(() => import("./components/EditableTable"), { ssr: false });
 
 export default function Admin() {
     return (

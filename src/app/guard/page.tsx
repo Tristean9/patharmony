@@ -1,14 +1,13 @@
 'use client'
 import React, { useState } from "react";
 import { Button } from "antd";
-import EditableTable from "./components/EditableTable";
-import dynamic from 'next/dynamic';
 
+import dynamic from 'next/dynamic';
+const EditableTable = dynamic(() => import("./components/EditableTable"), { ssr: false });
 const MapContainer = dynamic(() => import('./components/MapContainer'), { ssr: false });
 
 
 export default function Guard() {
-
 
     // 用于收到表格组件传递的数据
     const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
@@ -23,8 +22,6 @@ export default function Guard() {
     const handleLocationAddMarker = () => {
         setLocationsData(selectedLocation)
     }
-
-
 
     return (
         <div>
