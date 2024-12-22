@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import type { TableProps } from 'antd';
 import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, } from 'antd';
-import { ReportData } from '../page';
-import { UpdateParam } from '@/types';
+import { ReportData, UpdateParam } from '@/types';
+import { useViolationInfo } from '@/hooks';
+import dayjs from 'dayjs';
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -52,21 +53,21 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 };
 
 interface EditableTableProps {
-    reportData: ReportData[]
     handleSelectedLocation: (selectedData: string[]) => void
-    handleSave: (report: UpdateParam) => void
 }
 
-const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelectedLocation, handleSave }) => {
+const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation }) => {
     const [form] = Form.useForm();
+
+    const now = dayjs();
+    const { reportData, error, loading, updateData } = useViolationInfo({ dateFrom: `${now.format('YYYY-MM-DD')}T00:00:00`, dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59`, processed: false });
     const [data, setData] = useState<ReportData[]>(reportData);
 
-
-    // 使用 useEffect 来更新 data
     useEffect(() => {
+        console.log('表格组件获取了数据', reportData);
+
         setData(reportData);
     }, [reportData]);
-
 
     const [editingKey, setEditingKey] = useState('');
 
@@ -89,35 +90,22 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
             // 重置表单
             // form.resetFields() 
             console.log('report: ', report);
-            const submitData = {
+            const submitData: UpdateParam = {
                 reportId: report.reportId,
                 confirmed: row.confirmed,
-                ...(row.addRemark && { remark: [row.addRemark.trim()] })
+                ...(row.addRemark && { guardRemark: [row.addRemark.trim()] })
             }
 
             console.log('submitData: ', submitData);
-            handleSave(submitData);
-
-
-            // const newData = [...data];
-            // const index = newData.findIndex((item) => reportId === item.reportId);
-            // if (index > -1) {
-            //     const item = newData[index];
-            //     newData.splice(index, 1, {
-            //         ...item,
-            //         ...row,
-            //     });
-            //     setData(newData);
-            //     setEditingKey('');
-            // } else {
-            //     newData.push(row);
-            //     setData(newData);
-            //     setEditingKey('');
-            // }
+            await updateData(submitData);
+            // 重置表单
+            form.resetFields();
+            setEditingKey('');
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
+
 
     const columns = [
 
@@ -150,25 +138,20 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
             dataIndex: 'guardRemark',
             width: '15%',
             editable: false,
+            render: (index: number, record: ReportData) => (
+                <div>
+                    {record.guardRemark.map((remark, i) => (
+                        <div key={i}>{remark}</div>
+                    ))}
+                </div>
+            ),
         },
-        {
-            title: '增加备注(可选，非必需)',
-            dataIndex: 'addRemark',
-            width: '15%',
-            editable: true,
-        },
-        // {
-        //     title: '位置',
-        //     dataIndex: 'location',
-        //     width: '10%',
-        //     editable: false,
-        // },
         {
             title: '被核实',
             dataIndex: 'confirmed',
             width: '5%',
             editable: true,
-            render: (index: number, record: ReportData) => <span>{index} {record.confirmed ? '是' : '否'}</span>
+            render: (index: number, record: ReportData) => <span>{record.confirmed ? '是' : '否'}</span>
         },
         {
             title: '被处理',
@@ -201,6 +184,16 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
         },
     ];
 
+    // 动态添加 "增加备注" 列
+    if (editingKey) {
+        columns.splice(5, 0, {
+            title: '增加备注(可选，非必需)',
+            dataIndex: 'addRemark',
+            width: '15%',
+            editable: true,
+        });
+    }
+
     const mergedColumns: TableProps<ReportData>['columns'] = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -231,6 +224,9 @@ const EditableTable: React.FC<EditableTableProps> = ({ reportData, handleSelecte
         }),
         type: 'checkbox'
     };
+
+    if (loading) return <div>Loading API key...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div className=' mx-auto px-2'>

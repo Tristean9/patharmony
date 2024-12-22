@@ -18,7 +18,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     const updatePosition = useCallback((newPosition: MyPosition) => {
         setPosition(newPosition);
-        setCurrentPosition(`${newPosition.longitude}°,${newPosition.latitude}°`);
+        setCurrentPosition(`${newPosition.latitude}°,${newPosition.longitude}°`);
     }, [setCurrentPosition, setPosition])
 
     // 加载地图

@@ -1,40 +1,31 @@
-export async function GET(request: Request) {
-	console.log(request.body);
+import { getReportData } from "@/mocks";
 
-	return Response.json({
-		success: true,
-		message: "查询完成！",
-		data: [
-			{
-				reportId: "675e6a528f2e14509483a037",
-				vehicleType: "自行车",
-				plate_number: "",
-				remark: "",
-				guardRemark: [""],
-				location: "39.988792°,116.308303°",
-				confirmed: false,
-				processed: false,
-			},
-			{
-				reportId: "675e6a528f2e14ee9483a037",
-				vehicleType: "自行车",
-				plate_number: "",
-				remark: "",
-				guardRemark: [""],
-				location: "39.988729°,116.30719°",
-				confirmed: false,
-				processed: false,
-			},
-			{
-				reportId: "675e6a528f2e85509483a037",
-				vehicleType: "自行车",
-				plate_number: "",
-				remark: "",
-				guardRemark: [""],
-				location: "39.987394°,116.308532°",
-				confirmed: false,
-				processed: false,
-			},
-		],
-	});
+export async function GET(request: Request) {
+	const url = new URL(request.url);
+	const dateFrom = url.searchParams.get("dateFrom");
+	const dateEnd = url.searchParams.get("dateEnd");
+	const processedParam = url.searchParams.get("processed");
+	const processed =
+		processedParam === null ? undefined : processedParam === "true";
+
+	if (dateFrom && dateEnd) {
+		const data = getReportData(dateFrom, dateEnd, processed);
+
+		return new Response(
+			JSON.stringify({
+				success: true,
+				message: "查询完成！",
+				data,
+			}),
+			{ status: 200, headers: { "Content-Type": "application/json" } }
+		);
+	} else {
+		return new Response(
+			JSON.stringify({
+				success: false,
+				message: "缺少日期参数",
+			}),
+			{ status: 400, headers: { "Content-Type": "application/json" } }
+		);
+	}
 }

@@ -5,7 +5,6 @@ import { useMap } from "@/hooks";
 import { Alert } from "antd";
 
 interface MapContainerProps {
-    mapAPIKey: string | null
     locationsData: string[]
 }
 
