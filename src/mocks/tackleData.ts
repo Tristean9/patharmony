@@ -5,8 +5,6 @@ import path from "path";
 const dataFilePath = path.resolve(process.cwd(), "src/mocks/data.json");
 
 const readData = (): ReportData[] => {
-	console.log("dataFilePath: ", dataFilePath);
-
 	const data = fs.readFileSync(dataFilePath, "utf-8");
 	return JSON.parse(data);
 };

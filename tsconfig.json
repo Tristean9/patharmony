@@ -13,6 +13,8 @@
 		"isolatedModules": true,
 		"jsx": "preserve",
 		"incremental": true,
+		"declaration": true,
+		"declarationDir": "./types",
 		"plugins": [
 			{
 				"name": "next"

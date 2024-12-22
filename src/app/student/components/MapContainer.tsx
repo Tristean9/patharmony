@@ -32,13 +32,11 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
         const initPosition = position ?? { latitude: 39.988792, longitude: 116.308303 };
 
         try {
-            //创建一个 Marker 实例：
             const marker: AMap.Marker = new AMap.Marker({
                 position: [initPosition.longitude, initPosition.latitude], //经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
                 title: "当前位置",
                 draggable: true,
             });
-            console.log('marker', marker);
 
             updatePosition(initPosition);
 
@@ -46,7 +44,6 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
             // 给 marker 添加事件监听，拖拽后更新位置
             marker.on("dragend", () => {
                 const markerPos = marker.getPosition() as AMap.LngLat
-                console.log("dragend", markerPos);
                 const newPosition = {
                     latitude: markerPos.getLat(),
                     longitude: markerPos.getLng(),
