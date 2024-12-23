@@ -71,6 +71,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
     return (
         <div>
             <div
+                className="mt-6"
                 id="map-container"
                 style={{ height: "500px" }}
             ></div>

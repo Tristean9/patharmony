@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import "@amap/amap-jsapi-types";
 import { MyPosition } from "@/types";
-import { Alert, Typography } from 'antd';
+import { Alert } from 'antd';
 import { getCurrentLocation } from "@/utils/";
 import { useMap } from "@/hooks/";
 
@@ -71,7 +71,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
     }
     return (
         <div>
-            <Typography.Title level={5}>请拖拽地图或移动标记，获取您想提交的违停精确位置</Typography.Title>
+            <div className="font-medium">请拖拽地图或移动标记，获取您想提交的违停精确位置</div>
             <div
                 id="map-container"
                 className={"map-container"}

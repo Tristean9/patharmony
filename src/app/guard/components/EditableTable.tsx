@@ -54,12 +54,12 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
 
 
     const columns = [
-        {
-            title: '反馈信息ID',
-            dataIndex: 'reportId',
-            width: '15%',
-            editable: false,
-        },
+        // {
+        //     title: '反馈信息ID',
+        //     dataIndex: 'reportId',
+        //     width: '15%',
+        //     editable: false,
+        // },
         {
             title: '车辆类型',
             dataIndex: 'vehicleType',
@@ -94,21 +94,21 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
         {
             title: '被核实',
             dataIndex: 'confirmed',
-            width: '5%',
+            width: '10%',
             editable: true,
             render: (index: number, record: ReportData) => <span>{record.confirmed ? '是' : '否'}</span>
         },
         {
             title: '被处理',
             dataIndex: 'processed',
-            width: '5%',
+            width: '10%',
             editable: false,
             render: (index: number, record: ReportData) => <span>{index} {record.processed ? '是' : '否'}</span>
         },
         {
             title: '操作',
             dataIndex: 'operation',
-            width: '5%',
+            width: '15%',
             render: (index: number, record: ReportData) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -157,7 +157,6 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
 
     const rowSelection: TableProps<ReportData>['rowSelection'] = {
         onChange: (newSelectedData: React.Key[], selectedRows: ReportData[]) => {
-
             // 提取被选中的数据的位置
             const selectedLocation = selectedRows.map(item => item.location);
             // 传递给父组件
@@ -173,7 +172,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className=' mx-auto px-2'>
+        <div className='mx-auto '>
             <Form form={form} component={false}>
                 <Table<ReportData>
                     components={{
@@ -181,6 +180,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
                     }}
                     rowSelection={{
                         type: 'checkbox',
+                        columnWidth: '5%',
                         ...rowSelection,
                     }}
                     bordered

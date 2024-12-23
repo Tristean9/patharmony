@@ -1,8 +1,8 @@
 'use client'
 import React, { useState } from "react";
 import { Button } from "antd";
-
 import dynamic from 'next/dynamic';
+import Header from "@/components/Header";
 const EditableTable = dynamic(() => import("./components/EditableTable"), { ssr: false });
 const MapContainer = dynamic(() => import('./components/MapContainer'), { ssr: false });
 
@@ -25,9 +25,16 @@ export default function Guard() {
 
     return (
         <div>
-            <EditableTable handleSelectedLocation={handleSelectedLocation} />
-            <Button onClick={handleLocationAddMarker}>将选中的记录显示在地图上</Button>
-            <MapContainer locationsData={locationsData} />
+            <Header title="违停情况保安员确认页面" />
+            <div className="px-6">
+                <EditableTable handleSelectedLocation={handleSelectedLocation} />
+                <Button
+                    type="primary"
+                    className="bg-customRed"
+                    onClick={handleLocationAddMarker}>将选中的记录显示在地图上</Button>
+                <MapContainer locationsData={locationsData} />
+            </div>
+
         </div>
     )
 };

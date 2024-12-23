@@ -24,7 +24,7 @@ export interface StudentSubmitParams {
     location: string;
 }
 
-const  InfoForm: React.FC<InfoFormProps> = ({ location }) => {
+const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
@@ -90,52 +90,55 @@ const  InfoForm: React.FC<InfoFormProps> = ({ location }) => {
     const showInfoForm = () => {
         if (!submitSuccess && !submitError) {
             return (
-                <Form
-                    form={form}
-                    name="infoForm"
-                    onFinish={onFinish}
-                    layout="vertical"
-                    style={{ maxWidth: 500 }}
-                >
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="车辆类型"
-                                name="vehicleType"
-                                initialValue={"自行车"}
-                            >
-                                <Select
-                                    options={[
-                                        { value: "自行车", label: "自行车" },
-                                        { value: "电动车", label: "电动车" },
-                                        { value: "机动车", label: "机动车" },
-                                    ]}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="车辆识别信息(如车牌号)"
-                                name="plateNumber"
-                            >
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Form.Item
-                        label="违停情况备注"
-                        name={"remark"}
-                        labelCol={{ span: 24 }}
-                        wrapperCol={{ span: 24 }}
+                <div className="px-6 mt-3">
+                    <Form
+                        form={form}
+                        name="infoForm"
+                        onFinish={onFinish}
+                        layout="vertical"
+                        style={{ maxWidth: 500 }}
                     >
-                        <Input.TextArea />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            提交
-                        </Button>
-                    </Form.Item>
-                </Form>
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="车辆类型"
+                                    name="vehicleType"
+                                    initialValue={"自行车"}
+                                >
+                                    <Select
+                                        options={[
+                                            { value: "自行车", label: "自行车" },
+                                            { value: "电动车", label: "电动车" },
+                                            { value: "机动车", label: "机动车" },
+                                        ]}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="车辆识别信息(如车牌号)"
+                                    name="plateNumber"
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Form.Item
+                            label="违停情况备注"
+                            name={"remark"}
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
+                        >
+                            <Input.TextArea />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button className="bg-customRed" type="primary" htmlType="submit">
+                                提交
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </div>
+
             );
         }
     };

@@ -44,5 +44,18 @@
     "date": "2024-12-23T00:40:53",
     "confirmed": false,
     "processed": false
+  },
+  {
+    "reportId": "b22c96a7-c772-4d43-bb0e-0d3ba0de92af",
+    "vehicleType": "自行车",
+    "plateNumber": "",
+    "remark": "",
+    "guardRemark": [
+      ""
+    ],
+    "location": "39.989286°,116.29589°",
+    "date": "2024-12-23T01:03:51",
+    "confirmed": false,
+    "processed": false
   }
 ]

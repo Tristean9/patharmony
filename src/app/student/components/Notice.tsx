@@ -8,13 +8,12 @@ const Notice: React.FC = () => {
         "保持工作区域整洁。",
         "及时报告异常情况。",
         "定期进行设备维护。",
-        "遵循公司政策和流程。",
     ];
 
     // if (!submitSuccess && !submitError) {
     return (
-        <div>
-            <Typography.Title level={4}>注意事项</Typography.Title>
+        <div className='px-6'>
+            <div >注意事项</div>
             <List
                 bordered
                 dataSource={notices}
@@ -24,6 +23,7 @@ const Notice: React.FC = () => {
                     </List.Item>
                 )}
             />
+
         </div>
     );
 };

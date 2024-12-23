@@ -1,3 +1,4 @@
+import { Card } from "antd";
 import Link from "next/link";
 
 export default function Home() {
@@ -5,9 +6,15 @@ export default function Home() {
         <div>
             <h1></h1>
             <nav>
-                <Link href={"/student"}>学生页面</Link>
-                <Link href={"/guard"}>保安页面</Link>
-                <Link href={"/admin"}>管理员页面</Link>
+                <Card>
+                    <Link href={"/student"}>学生页面</Link>
+                </Card>
+                <Card>
+                    <Link href={"/guard"}>保安页面</Link>
+                </Card>
+                <Card>
+                    <Link href={"/admin"}>管理员页面</Link>
+                </Card>
             </nav>
         </div>
     );
