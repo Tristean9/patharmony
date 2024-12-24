@@ -1,4 +1,4 @@
-import { updateReportData } from "@/mocks";
+import { updateReportData } from '@/mocks';
 
 export async function POST(request: Request) {
     const updatedReport = await request.json();
@@ -9,8 +9,8 @@ export async function POST(request: Request) {
     return new Response(
         JSON.stringify({
             success: true,
-            message: "更新成功",
+            message: '更新成功',
         }),
-        { status: 200, headers: { "Content-Type": "application/json" } }
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
     );
 }

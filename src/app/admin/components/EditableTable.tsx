@@ -10,7 +10,7 @@ const EditableTable: React.FC = () => {
     const [form] = Form.useForm();
 
     const now = getNow();
-    const { reportData, error, loading, updateData, deleteData } = useViolationInfo({ dateFrom: `2024-12-01T00:00:00`, dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59` });
+    const { reportData, error, loading, updateData, deleteData } = useViolationInfo({ dateFrom: '2024-12-01T00:00:00', dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59` });
     const [data, setData] = useState<ReportData[]>(reportData);
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const EditableTable: React.FC = () => {
             const submitData: UpdateParam = {
                 reportId: report.reportId,
                 confirmed: row.confirmed,
-                ...(row.addRemark && { guardRemark: [row.addRemark.trim()] })
+                ...(row.addRemark && { guardRemark: [row.addRemark.trim()] }),
             }
 
             await updateData(submitData);
@@ -93,14 +93,14 @@ const EditableTable: React.FC = () => {
             dataIndex: 'confirmed',
             width: '5%',
             editable: true,
-            render: (index: number, record: ReportData) => <span>{record.confirmed ? '是' : '否'}</span>
+            render: (index: number, record: ReportData) => <span>{record.confirmed ? '是' : '否'}</span>,
         },
         {
             title: '被处理',
             dataIndex: 'processed',
             width: '5%',
             editable: false,
-            render: (index: number, record: ReportData) => <span>{index} {record.processed ? '是' : '否'}</span>
+            render: (index: number, record: ReportData) => <span>{index} {record.processed ? '是' : '否'}</span>,
         },
         {
             title: '编辑',
@@ -160,7 +160,7 @@ const EditableTable: React.FC = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className=' mx-auto px-2'>
+        <div className=" mx-auto px-2">
             <Form form={form} component={false}>
                 <Table<ReportData>
                     components={{

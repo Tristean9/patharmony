@@ -1,1 +1,1 @@
-export * from "./tackleData";
+export * from './tackleData';

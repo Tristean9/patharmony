@@ -6,12 +6,12 @@ import {
     Input,
     Select,
     Col,
-    Result
-} from "antd";
-import type { FormProps } from "antd";
-import { useState } from "react";
-import axios from "axios";
-import { SubmitResponse } from "@/types";
+    Result,
+} from 'antd';
+import type { FormProps } from 'antd';
+import { useState } from 'react';
+import axios from 'axios';
+import { SubmitResponse } from '@/types';
 
 interface InfoFormProps {
     location: string
@@ -31,7 +31,7 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
 
     const [form] = Form.useForm();
 
-    const onFinish: FormProps["onFinish"] = async (values) => {
+    const onFinish: FormProps['onFinish'] = async (values) => {
 
         const submitValues: StudentSubmitParams = { ...values, location };
 
@@ -42,7 +42,7 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
             setSubmitError(!success);
             setSubmitMessage(message);
         } catch (error) {
-            setSubmitMessage(axios.isAxiosError(error) ? error.response?.data?.error : "提交违停信息失败")
+            setSubmitMessage(axios.isAxiosError(error) ? error.response?.data?.error : '提交违停信息失败')
         }
     };
 
@@ -103,20 +103,20 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
                                 <Form.Item
                                     label="车辆类型"
                                     name="vehicleType"
-                                    initialValue={"自行车"}
+                                    initialValue={'自行车'}
                                 >
                                     <Select
                                         options={[
-                                            { value: "自行车", label: "自行车" },
-                                            { value: "电动车", label: "电动车" },
-                                            { value: "机动车", label: "机动车" },
+                                            { value: '自行车', label: '自行车' },
+                                            { value: '电动车', label: '电动车' },
+                                            { value: '机动车', label: '机动车' },
                                         ]}
                                     />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
-                                    label="车辆识别信息(如车牌号)"
+                                    label="车牌号(如有)"
                                     name="plateNumber"
                                 >
                                     <Input />
@@ -125,7 +125,7 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
                         </Row>
                         <Form.Item
                             label="违停情况备注"
-                            name={"remark"}
+                            name={'remark'}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
                         >

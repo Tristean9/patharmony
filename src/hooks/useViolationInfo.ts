@@ -1,6 +1,6 @@
-import { ReportData, UpdateParam } from "@/types";
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { ReportData, UpdateParam } from '@/types';
+import axios from 'axios';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface ViolationSubmitResponse {
     success: boolean;
@@ -33,7 +33,7 @@ export const useViolationInfo = ({
                         dateEnd,
                         processed,
                     },
-                }
+                },
             );
             const { data, success, message } = response.data;
             if (success && data) {
@@ -42,7 +42,7 @@ export const useViolationInfo = ({
                 setError(message);
             }
         } catch (err) {
-            let errorMessage = "An unknown error occurred";
+            let errorMessage = 'An unknown error occurred';
             if (axios.isAxiosError(err)) {
                 // 处理 Axios 错误
                 if (err.response) {
@@ -52,7 +52,7 @@ export const useViolationInfo = ({
                     } - ${JSON.stringify(err.response.data)}`;
                 } else if (err.request) {
                     // 请求已经发出，但没有收到响应
-                    errorMessage = "No response received from server";
+                    errorMessage = 'No response received from server';
                 } else {
                     // 设置请求时发生了错误
                     errorMessage = err.message;
@@ -71,24 +71,24 @@ export const useViolationInfo = ({
         try {
             const response = await axios.post<ViolationSubmitResponse>(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/tackle/${report.reportId}`,
-                report
+                report,
             );
             const { success, message } = response.data;
             if (success) {
                 // 更新数据后重新获取数据
-                fetchData(); 
+                fetchData();
             } else {
                 setError(message);
             }
         } catch (err) {
-            let errorMessage = "An unknown error occurred";
+            let errorMessage = 'An unknown error occurred';
             if (axios.isAxiosError(err)) {
                 if (err.response) {
                     errorMessage = `Server error: ${
                         err.response.status
                     } - ${JSON.stringify(err.response.data)}`;
                 } else if (err.request) {
-                    errorMessage = "No response received from server";
+                    errorMessage = 'No response received from server';
                 } else {
                     errorMessage = err.message;
                 }
@@ -102,7 +102,7 @@ export const useViolationInfo = ({
     const deleteData = useCallback(async (reportId: string) => {
         try {
             const response = await axios.delete<ViolationSubmitResponse>(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/delete/${reportId}`
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/delete/${reportId}`,
             );
             const { success, message } = response.data;
             if (success) {
@@ -111,14 +111,14 @@ export const useViolationInfo = ({
                 setError(message);
             }
         } catch (err) {
-            let errorMessage = "An unknown error occurred";
+            let errorMessage = 'An unknown error occurred';
             if (axios.isAxiosError(err)) {
                 if (err.response) {
                     errorMessage = `Server error: ${
                         err.response.status
                     } - ${JSON.stringify(err.response.data)}`;
                 } else if (err.request) {
-                    errorMessage = "No response received from server";
+                    errorMessage = 'No response received from server';
                 } else {
                     errorMessage = err.message;
                 }

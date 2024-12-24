@@ -1,20 +1,19 @@
 'use client'
-import { useCallback, useEffect, useState } from "react";
-import "@amap/amap-jsapi-types";
-import { MyPosition } from "@/types";
+import { useCallback, useEffect, useState } from 'react';
+import '@amap/amap-jsapi-types';
+import { MyPosition } from '@/types';
 import { Alert } from 'antd';
-import { getCurrentLocation } from "@/utils/";
-import { useMap } from "@/hooks/";
+import { getCurrentLocation } from '@/utils/';
+import { useMap } from '@/hooks/';
 
 interface MapContainerProps {
     setCurrentPosition: (position: string) => void;
 }
 
-
 const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     const [, setPosition] = useState<MyPosition | null>(null);
-    const { map, loading, error, mapLoaded } = useMap("map-container");
+    const { map, loading, error, mapLoaded } = useMap('map-container');
 
     const updatePosition = useCallback((newPosition: MyPosition) => {
         setPosition(newPosition);
@@ -24,7 +23,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
     // 加载地图
     const updateMarker = useCallback(async () => {
 
-        if (typeof window === "undefined" || !mapLoaded) {
+        if (typeof window === 'undefined' || !mapLoaded) {
             return;
         }
 
@@ -34,7 +33,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
         try {
             const marker: AMap.Marker = new AMap.Marker({
                 position: [initPosition.longitude, initPosition.latitude], //经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-                title: "当前位置",
+                title: '当前位置',
                 draggable: true,
             });
 
@@ -42,7 +41,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
             (map.current as AMap.Map).add(marker);
             // 给 marker 添加事件监听，拖拽后更新位置
-            marker.on("dragend", () => {
+            marker.on('dragend', () => {
                 const markerPos = marker.getPosition() as AMap.LngLat
                 const newPosition = {
                     latitude: markerPos.getLat(),
@@ -56,11 +55,9 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
         }
     }, [updatePosition, map, mapLoaded])
 
-
     useEffect(() => {
         updateMarker()
     }, [updateMarker]);
-
 
     if (loading) {
         return <div>Loading map...</div>;
@@ -71,11 +68,11 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
     }
     return (
         <div>
-            <div className="font-medium">请拖拽地图或移动标记，获取您想提交的违停精确位置</div>
+            <div className="font-medium">请拖拽地图或移动标记，确定提交的违停精确位置</div>
             <div
                 id="map-container"
-                className={"map-container"}
-                style={{ height: "350px" }}
+                className={'map-container'}
+                style={{ height: '350px' }}
             ></div>
         </div>
     );

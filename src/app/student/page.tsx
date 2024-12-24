@@ -1,16 +1,15 @@
 'use client'
-import { useState } from "react";
-import InfoForm from "./components/InfoForm";
-import Notice from "./components/Notice";
+import { useState } from 'react';
+import InfoForm from './components/InfoForm';
+import Notice from './components/Notice';
 import dynamic from 'next/dynamic';
-import Header from "@/components/Header";
+import Header from '@/components/Header';
 
 const MapContainer = dynamic(() => import('./components/MapContainer'), { ssr: false });
 
 export default function Student() {
 
-    const [currentPosition, setCurrentPosition] = useState<string>("");
-
+    const [currentPosition, setCurrentPosition] = useState<string>('');
 
     return (
         <div >
@@ -20,5 +19,5 @@ export default function Student() {
             <Notice />
         </div>
     );
-};
+}
 

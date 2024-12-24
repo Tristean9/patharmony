@@ -1,18 +1,16 @@
 import React from 'react';
-import { Typography, List } from "antd";
+import { Typography, List } from 'antd';
 
 const Notice: React.FC = () => {
-    // 注意事项数据
+
     const notices = [
-        "请遵守安全规定。",
-        "保持工作区域整洁。",
-        "及时报告异常情况。",
-        "定期进行设备维护。",
+        '请确保定位精准',
+        '请不要填写不实信息',
+        '请不要恶意上报信息',
     ];
 
-    // if (!submitSuccess && !submitError) {
     return (
-        <div className='px-6'>
+        <div className="px-6">
             <div >注意事项</div>
             <List
                 bordered
@@ -23,7 +21,6 @@ const Notice: React.FC = () => {
                     </List.Item>
                 )}
             />
-
         </div>
     );
 };

@@ -1,11 +1,10 @@
 'use client'
-import React, { useState } from "react";
-import { Button } from "antd";
+import React, { useState } from 'react';
+import { Button } from 'antd';
 import dynamic from 'next/dynamic';
-import Header from "@/components/Header";
-const EditableTable = dynamic(() => import("./components/EditableTable"), { ssr: false });
+import Header from '@/components/Header';
+const EditableTable = dynamic(() => import('./components/EditableTable'), { ssr: false });
 const MapContainer = dynamic(() => import('./components/MapContainer'), { ssr: false });
-
 
 export default function Guard() {
 
@@ -37,4 +36,4 @@ export default function Guard() {
 
         </div>
     )
-};
+}

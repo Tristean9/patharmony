@@ -1,4 +1,4 @@
-import { VehicleType } from "./VehicleType";
+import { VehicleType } from './VehicleType';
 
 export interface UpdateParam {
     reportId: string

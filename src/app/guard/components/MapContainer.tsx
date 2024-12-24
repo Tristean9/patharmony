@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef } from "react";
-import "@amap/amap-jsapi-types";
-import { MyPosition } from "@/types";
-import { useMap } from "@/hooks";
-import { Alert } from "antd";
+import { useCallback, useEffect, useRef } from 'react';
+import '@amap/amap-jsapi-types';
+import { MyPosition } from '@/types';
+import { useMap } from '@/hooks';
+import { Alert } from 'antd';
 
 interface MapContainerProps {
     locationsData: string[]
@@ -11,12 +11,11 @@ interface MapContainerProps {
 const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
 
     const markersRef = useRef<AMap.Marker[]>([])
-    const { map, loading, error, mapLoaded } = useMap("map-container");
-
+    const { map, loading, error, mapLoaded } = useMap('map-container');
 
     // 将被选中的位置更新到地图上
     const updateMarkers = useCallback((positions: MyPosition[]) => {
-        if (typeof window === "undefined" || !mapLoaded) {
+        if (typeof window === 'undefined' || !mapLoaded) {
             return;
         }
         const newSet = new Set(positions.map(pos => `${pos.latitude},${pos.longitude}`))
@@ -42,7 +41,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
             if (!exists) {
                 const marker = new AMap.Marker({
                     position: [position.longitude, position.latitude],
-                    title: "当前位置",
+                    title: '当前位置',
                 });
                 (map.current as AMap.Map).add(marker);
                 markersRef.current.push(marker)
@@ -73,7 +72,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ locationsData }) => {
             <div
                 className="mt-6"
                 id="map-container"
-                style={{ height: "500px" }}
+                style={{ height: '500px' }}
             ></div>
         </div>
     );

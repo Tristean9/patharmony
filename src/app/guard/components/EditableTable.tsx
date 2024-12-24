@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import type { TableProps } from 'antd';
-import { Form, Popconfirm, Table, Typography, } from 'antd';
+import { Form, Popconfirm, Table, Typography } from 'antd';
 import { ReportData, UpdateParam } from '@/types';
 import { useViolationInfo } from '@/hooks';
 import { getNow } from '@/utils';
@@ -40,7 +40,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
             const submitData: UpdateParam = {
                 reportId: report.reportId,
                 confirmed: row.confirmed,
-                ...(row.addRemark && { guardRemark: [row.addRemark.trim()] })
+                ...(row.addRemark && { guardRemark: [row.addRemark.trim()] }),
             }
 
             await updateData(submitData);
@@ -51,7 +51,6 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
             console.log('Validate Failed:', errInfo);
         }
     };
-
 
     const columns = [
         // {
@@ -96,14 +95,14 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
             dataIndex: 'confirmed',
             width: '10%',
             editable: true,
-            render: (index: number, record: ReportData) => <span>{record.confirmed ? '是' : '否'}</span>
+            render: (index: number, record: ReportData) => <span>{record.confirmed ? '是' : '否'}</span>,
         },
         {
             title: '被处理',
             dataIndex: 'processed',
             width: '10%',
             editable: false,
-            render: (index: number, record: ReportData) => <span>{index} {record.processed ? '是' : '否'}</span>
+            render: (index: number, record: ReportData) => <span>{index} {record.processed ? '是' : '否'}</span>,
         },
         {
             title: '操作',
@@ -165,14 +164,14 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
         getCheckboxProps: (record: ReportData) => ({
             name: record.reportId,
         }),
-        type: 'checkbox'
+        type: 'checkbox',
     };
 
     if (loading) return <div>Loading API key...</div>;
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className='mx-auto '>
+        <div className="mx-auto ">
             <Form form={form} component={false}>
                 <Table<ReportData>
                     components={{

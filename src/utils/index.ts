@@ -1,2 +1,2 @@
-export * from "./getCurrentLocation";
-export * from "./getNow";
+export * from './getCurrentLocation';
+export * from './getNow';
