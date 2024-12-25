@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from 'react';
 import '@amap/amap-jsapi-types';
 import { MyPosition } from '@/types';
 import { Alert } from 'antd';
-import { getCurrentLocation } from '@/utils/';
 import { useMap } from '@/hooks/';
 
 interface MapContainerProps {
@@ -14,30 +13,28 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     const [, setPosition] = useState<MyPosition | null>(null);
     const { map, loading, error, mapLoaded } = useMap('map-container');
+    const [mapError, setMapError] = useState<string | null>(null);
 
     const updatePosition = useCallback((newPosition: MyPosition) => {
         setPosition(newPosition);
         setCurrentPosition(`${newPosition.latitude}°,${newPosition.longitude}°`);
     }, [setCurrentPosition, setPosition])
 
-    // 加载地图
     const updateMarker = useCallback(async () => {
 
         if (typeof window === 'undefined' || !mapLoaded) {
             return;
         }
 
-        const { position } = await getCurrentLocation();
-        const initPosition = position ?? { latitude: 39.988792, longitude: 116.308303 };
-
         try {
+            const center =  (map.current as AMap.Map).getCenter()
             const marker: AMap.Marker = new AMap.Marker({
-                position: [initPosition.longitude, initPosition.latitude], //经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+                position: center,
                 title: '当前位置',
                 draggable: true,
             });
 
-            updatePosition(initPosition);
+            updatePosition({latitude: center.getLat(), longitude: center.getLng()});
 
             (map.current as AMap.Map).add(marker);
             // 给 marker 添加事件监听，拖拽后更新位置
@@ -51,7 +48,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
             });
 
         } catch (error) {
-            console.log(error);
+            setMapError(`打开定位服务，并刷新页面。${error}` )
         }
     }, [updatePosition, map, mapLoaded])
 
@@ -61,6 +58,9 @@ const MapContainer: React.FC<MapContainerProps> = ({ setCurrentPosition }) => {
 
     if (loading) {
         return <div>Loading map...</div>;
+    }
+    if (mapError) {
+        return <Alert message={mapError} type="error" closable />
     }
 
     if (error) {

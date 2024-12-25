@@ -15,7 +15,12 @@ export const useMap = (containerId: string) => {
             return;
         }
 
-        const { position } = await getCurrentLocation();
+        const { position, error } = await getCurrentLocation();
+        if (error) {
+            setError('请打开定位服务，并刷新页面');
+            setLoading(false);
+            return;
+        }
         const initPosition = [
             position?.longitude ?? 116.308303,
             position?.latitude ?? 39.988792,
