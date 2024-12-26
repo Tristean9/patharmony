@@ -1,8 +1,7 @@
+import {List, Typography} from 'antd';
 import React from 'react';
-import { Typography, List } from 'antd';
 
 const Notice: React.FC = () => {
-
     const notices = [
         '如果地图没有显示，请确保打开定位服务',
         '请确保定位精准',
@@ -12,7 +11,7 @@ const Notice: React.FC = () => {
 
     return (
         <div className="px-6">
-            <div >注意事项</div>
+            <div>注意事项</div>
             <List
                 bordered
                 dataSource={notices}

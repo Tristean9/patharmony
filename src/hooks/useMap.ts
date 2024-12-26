@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import axios from 'axios';
+import {getCurrentLocation} from '@/utils';
 import AMapLoader from '@amap/amap-jsapi-loader';
-import { getCurrentLocation } from '@/utils';
+import axios from 'axios';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 export const useMap = (containerId: string) => {
     const map = useRef<AMap.Map | null>(null);
@@ -15,7 +15,7 @@ export const useMap = (containerId: string) => {
             return;
         }
 
-        const { position, error } = await getCurrentLocation();
+        const {position, error} = await getCurrentLocation();
         if (error) {
             setError('请打开定位服务，并刷新页面');
             setLoading(false);
@@ -57,16 +57,14 @@ export const useMap = (containerId: string) => {
         const fetchMapAPIKey = async () => {
             try {
                 const response = await axios.get('/api/session/locationMap');
-                const { apikey } = response.data;
+                const {apikey} = response.data;
                 setMapAPIKey(apikey);
             } catch (err) {
                 let errorMessage = 'An unknown error occurred';
                 if (axios.isAxiosError(err)) {
                     // 处理 Axios 错误
                     if (err.response) {
-                        errorMessage = `Server error: ${
-                            err.response.status
-                        } - ${JSON.stringify(err.response.data)}`;
+                        errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
                     } else if (err.request) {
                         errorMessage = 'No response received from server';
                     } else {
@@ -89,5 +87,5 @@ export const useMap = (containerId: string) => {
         }
     }, [mapAPIKey, loadMap]);
 
-    return { map, loading, error, mapLoaded };
+    return {map, loading, error, mapLoaded};
 };

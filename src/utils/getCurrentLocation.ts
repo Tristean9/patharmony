@@ -1,8 +1,8 @@
-import { MyPosition } from '@/types';
+import {MyPosition} from '@/types';
 
 interface GetLocationResult {
-	position: MyPosition | null;
-	error: string | null;
+    position: MyPosition | null;
+    error: string | null;
 }
 
 // 获取当前定位
@@ -20,7 +20,7 @@ export const getCurrentLocation = (): Promise<GetLocationResult> => {
                     });
                 },
                 (err) => {
-                    resolve({ error: err.message, position: null });
+                    resolve({error: err.message, position: null});
                 },
             );
         } else {

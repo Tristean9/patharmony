@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
-import React, { useState } from 'react';
+import {redirect} from 'next/navigation';
+import React, {useState} from 'react';
 
 const LoginForm: React.FC = () => {
     const [ID, setID] = useState('');
@@ -46,7 +46,7 @@ const LoginForm: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-                // required
+                    // required
                 />
             </div>
             <button

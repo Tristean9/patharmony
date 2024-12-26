@@ -1,13 +1,12 @@
-'use client'
-import React, { useState } from 'react';
-import { Button } from 'antd';
-import dynamic from 'next/dynamic';
+'use client';
 import Header from '@/components/Header';
-const EditableTable = dynamic(() => import('./components/EditableTable'), { ssr: false });
-const MapContainer = dynamic(() => import('./components/MapContainer'), { ssr: false });
+import {Button} from 'antd';
+import dynamic from 'next/dynamic';
+import React, {useState} from 'react';
+const EditableTable = dynamic(() => import('./components/EditableTable'), {ssr: false});
+const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
 
 export default function Guard() {
-
     // 用于收到表格组件传递的数据
     const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
     // 用于给地图组件传递数据
@@ -15,12 +14,12 @@ export default function Guard() {
 
     // 给子组件调用的方法
     const handleSelectedLocation = (selectedLocation: string[]) => {
-        setSelectedLocation(selectedLocation)
-    }
+        setSelectedLocation(selectedLocation);
+    };
 
     const handleLocationAddMarker = () => {
-        setLocationsData(selectedLocation)
-    }
+        setLocationsData(selectedLocation);
+    };
 
     return (
         <div>
@@ -30,10 +29,12 @@ export default function Guard() {
                 <Button
                     type="primary"
                     className="bg-customRed"
-                    onClick={handleLocationAddMarker}>将选中的记录显示在地图上</Button>
+                    onClick={handleLocationAddMarker}
+                >
+                    将选中的记录显示在地图上
+                </Button>
                 <MapContainer locationsData={locationsData} />
             </div>
-
         </div>
-    )
+    );
 }

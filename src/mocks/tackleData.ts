@@ -1,4 +1,4 @@
-import { ReportData } from '@/types';
+import {ReportData} from '@/types';
 import fs from 'fs';
 import path from 'path';
 
@@ -24,8 +24,8 @@ export const getReportData = (
     const EndDate = new Date(dateEnd);
     reportData = reportData.filter(
         (report) =>
-            new Date(report.date) >= fromDate &&
-			new Date(report.date) <= EndDate,
+            new Date(report.date) >= fromDate
+            && new Date(report.date) <= EndDate,
     );
 
     if (processed !== undefined) {

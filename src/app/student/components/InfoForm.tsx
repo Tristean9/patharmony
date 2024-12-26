@@ -1,20 +1,12 @@
-'use client'
-import {
-    Row,
-    Button,
-    Form,
-    Input,
-    Select,
-    Col,
-    Result,
-} from 'antd';
-import type { FormProps } from 'antd';
-import { useState } from 'react';
+'use client';
+import {SubmitResponse} from '@/types';
+import {Button, Col, Form, Input, Result, Row, Select} from 'antd';
+import type {FormProps} from 'antd';
 import axios from 'axios';
-import { SubmitResponse } from '@/types';
+import {useState} from 'react';
 
 interface InfoFormProps {
-    location: string
+    location: string;
 }
 
 export interface StudentSubmitParams {
@@ -24,7 +16,7 @@ export interface StudentSubmitParams {
     location: string;
 }
 
-const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
+const InfoForm: React.FC<InfoFormProps> = ({location}) => {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
@@ -32,17 +24,19 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
     const [form] = Form.useForm();
 
     const onFinish: FormProps['onFinish'] = async (values) => {
-
-        const submitValues: StudentSubmitParams = { ...values, location };
+        const submitValues: StudentSubmitParams = {...values, location};
 
         try {
-            const response = await axios.post<SubmitResponse>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`, submitValues);
-            const { success, message } = response.data
+            const response = await axios.post<SubmitResponse>(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report`,
+                submitValues,
+            );
+            const {success, message} = response.data;
             setSubmitSuccess(success);
             setSubmitError(!success);
             setSubmitMessage(message);
         } catch (error) {
-            setSubmitMessage(axios.isAxiosError(error) ? error.response?.data?.error : '提交违停信息失败')
+            setSubmitMessage(axios.isAxiosError(error) ? error.response?.data?.error : '提交违停信息失败');
         }
     };
 
@@ -50,11 +44,11 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
         setSubmitSuccess(false);
         setSubmitError(false);
         setSubmitMessage(null);
-        form.resetFields();  // 重置表单
+        form.resetFields(); // 重置表单
     };
 
     const handleFixAndResubmit = () => {
-        setSubmitError(false);  // 移除错误状态，但保留用户填入的信息
+        setSubmitError(false); // 移除错误状态，但保留用户填入的信息
     };
 
     const showSuccess = () => {
@@ -65,7 +59,7 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
                         status="success"
                         title="提交成功"
                         subTitle={submitMessage}
-                        extra={<Button type="primary" onClick={handleRetry}> 返回再次提交</Button>}
+                        extra={<Button type="primary" onClick={handleRetry}>返回再次提交</Button>}
                     />
                 </>
             );
@@ -96,7 +90,7 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
                         name="infoForm"
                         onFinish={onFinish}
                         layout="vertical"
-                        style={{ maxWidth: 500 }}
+                        style={{maxWidth: 500}}
                     >
                         <Row gutter={16}>
                             <Col span={12}>
@@ -107,9 +101,9 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
                                 >
                                     <Select
                                         options={[
-                                            { value: '自行车', label: '自行车' },
-                                            { value: '电动车', label: '电动车' },
-                                            { value: '机动车', label: '机动车' },
+                                            {value: '自行车', label: '自行车'},
+                                            {value: '电动车', label: '电动车'},
+                                            {value: '机动车', label: '机动车'},
                                         ]}
                                     />
                                 </Form.Item>
@@ -126,8 +120,8 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
                         <Form.Item
                             label="违停情况备注"
                             name={'remark'}
-                            labelCol={{ span: 24 }}
-                            wrapperCol={{ span: 24 }}
+                            labelCol={{span: 24}}
+                            wrapperCol={{span: 24}}
                         >
                             <Input.TextArea />
                         </Form.Item>
@@ -138,7 +132,6 @@ const InfoForm: React.FC<InfoFormProps> = ({ location }) => {
                         </Form.Item>
                     </Form>
                 </div>
-
             );
         }
     };

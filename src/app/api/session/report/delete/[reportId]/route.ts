@@ -1,4 +1,4 @@
-import { deleteReportData } from '@/mocks';
+import {deleteReportData} from '@/mocks';
 
 export async function DELETE(request: Request) {
     const url = new URL(request.url);
@@ -13,7 +13,7 @@ export async function DELETE(request: Request) {
                 success: true,
                 message: '删除成功',
             }),
-            { status: 200, headers: { 'Content-Type': 'application/json' } },
+            {status: 200, headers: {'Content-Type': 'application/json'}},
         );
     } else {
         return new Response(
@@ -21,7 +21,7 @@ export async function DELETE(request: Request) {
                 success: false,
                 message: '未找到报告ID',
             }),
-            { status: 400, headers: { 'Content-Type': 'application/json' } },
+            {status: 400, headers: {'Content-Type': 'application/json'}},
         );
     }
 }

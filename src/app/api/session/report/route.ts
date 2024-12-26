@@ -1,14 +1,13 @@
-import { StudentSubmitParams } from '@/app/student/components/InfoForm';
-import { updateReportData } from '@/mocks/tackleData';
-import { v4 as uuidv4 } from 'uuid';
-import { VehicleType } from '@/types';
-import { getNow } from '@/utils';
+import {StudentSubmitParams} from '@/app/student/components/InfoForm';
+import {updateReportData} from '@/mocks/tackleData';
+import {VehicleType} from '@/types';
+import {getNow} from '@/utils';
+import {v4 as uuidv4} from 'uuid';
 
 export async function POST(request: Request) {
     // 手动解析 JSON 请求体
     const requestBody = await request.json();
-    const { vehicleType, plateNumber, remark, location } =
-		requestBody as StudentSubmitParams;
+    const {vehicleType, plateNumber, remark, location} = requestBody as StudentSubmitParams;
 
     // 验证输入信息
     if (!vehicleType || !location) {
@@ -18,7 +17,7 @@ export async function POST(request: Request) {
                 message: '信息不完整，请确保填写车辆和位置字段。',
                 error: '缺少字段',
             }),
-            { status: 400, headers: { 'Content-Type': 'application/json' } },
+            {status: 400, headers: {'Content-Type': 'application/json'}},
         );
     }
 
@@ -30,7 +29,7 @@ export async function POST(request: Request) {
                 message: '车辆类型无效。',
                 error: '无效的车辆类型',
             }),
-            { status: 400, headers: { 'Content-Type': 'application/json' } },
+            {status: 400, headers: {'Content-Type': 'application/json'}},
         );
     }
 
@@ -57,6 +56,6 @@ export async function POST(request: Request) {
             success: true,
             message: '模拟提交，反馈成功',
         }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
+        {status: 200, headers: {'Content-Type': 'application/json'}},
     );
 }

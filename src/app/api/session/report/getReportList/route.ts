@@ -1,12 +1,11 @@
-import { getReportData } from '@/mocks';
+import {getReportData} from '@/mocks';
 
 export async function GET(request: Request) {
     const url = new URL(request.url);
     const dateFrom = url.searchParams.get('dateFrom');
     const dateEnd = url.searchParams.get('dateEnd');
     const processedParam = url.searchParams.get('processed');
-    const processed =
-		processedParam === null ? undefined : processedParam === 'true';
+    const processed = processedParam === null ? undefined : processedParam === 'true';
 
     if (dateFrom && dateEnd) {
         const data = getReportData(dateFrom, dateEnd, processed);
@@ -17,7 +16,7 @@ export async function GET(request: Request) {
                 message: '查询完成！',
                 data,
             }),
-            { status: 200, headers: { 'Content-Type': 'application/json' } },
+            {status: 200, headers: {'Content-Type': 'application/json'}},
         );
     } else {
         return new Response(
@@ -25,7 +24,7 @@ export async function GET(request: Request) {
                 success: false,
                 message: '缺少日期参数',
             }),
-            { status: 400, headers: { 'Content-Type': 'application/json' } },
+            {status: 400, headers: {'Content-Type': 'application/json'}},
         );
     }
 }

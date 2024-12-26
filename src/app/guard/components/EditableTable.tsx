@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import type { TableProps } from 'antd';
-import { Form, Popconfirm, Table, Typography } from 'antd';
-import { ReportData, UpdateParam } from '@/types';
-import { useViolationInfo } from '@/hooks';
-import { getNow } from '@/utils';
+import {useViolationInfo} from '@/hooks';
+import {ReportData, UpdateParam} from '@/types';
+import {getNow} from '@/utils';
+import type {TableProps} from 'antd';
+import {Form, Popconfirm, Table, Typography} from 'antd';
+import React, {useEffect, useState} from 'react';
 import EditableCell from './EditableCell';
 
 interface EditableTableProps {
-    handleSelectedLocation: (selectedData: string[]) => void
+    handleSelectedLocation: (selectedData: string[]) => void;
 }
 
-const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation }) => {
+const EditableTable: React.FC<EditableTableProps> = ({handleSelectedLocation}) => {
     const [form] = Form.useForm();
 
     const now = getNow();
-    const { reportData, error, loading, updateData } = useViolationInfo({ dateFrom: `${now.format('YYYY-MM-DD')}T00:00:00`, dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59`, processed: false });
+    const {reportData, error, loading, updateData} = useViolationInfo({
+        dateFrom: `${now.format('YYYY-MM-DD')}T00:00:00`,
+        dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59`,
+        processed: false,
+    });
     const [data, setData] = useState<ReportData[]>(reportData);
 
     useEffect(() => {
@@ -25,8 +29,8 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
 
     const isEditing = (record: ReportData) => record.reportId === editingKey;
 
-    const edit = (record: Partial<ReportData> & { reportId: string }) => {
-        form.setFieldsValue({ ...record });
+    const edit = (record: Partial<ReportData> & {reportId: string}) => {
+        form.setFieldsValue({...record});
         setEditingKey(record.reportId);
     };
 
@@ -40,8 +44,8 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
             const submitData: UpdateParam = {
                 reportId: report.reportId,
                 confirmed: row.confirmed,
-                ...(row.addRemark && { guardRemark: [row.addRemark.trim()] }),
-            }
+                ...(row.addRemark && {guardRemark: [row.addRemark.trim()]}),
+            };
 
             await updateData(submitData);
             // 重置表单
@@ -84,9 +88,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
             editable: false,
             render: (index: number, record: ReportData) => (
                 <div>
-                    {record.guardRemark.map((remark, i) => (
-                        <div key={i}>{remark}</div>
-                    ))}
+                    {record.guardRemark.map((remark, i) => <div key={i}>{remark}</div>)}
                 </div>
             ),
         },
@@ -110,20 +112,22 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
             width: '15%',
             render: (index: number, record: ReportData) => {
                 const editable = isEditing(record);
-                return editable ? (
-                    <span>
-                        <Typography.Link onClick={() => save(record)} style={{ marginInlineEnd: 8 }}>
-                            保存
+                return editable
+                    ? (
+                        <span>
+                            <Typography.Link onClick={() => save(record)} style={{marginInlineEnd: 8}}>
+                                保存
+                            </Typography.Link>
+                            <Popconfirm title="确定取消?" onConfirm={cancel}>
+                                <a>取消</a>
+                            </Popconfirm>
+                        </span>
+                    )
+                    : (
+                        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                            编辑
                         </Typography.Link>
-                        <Popconfirm title="确定取消?" onConfirm={cancel}>
-                            <a>取消</a>
-                        </Popconfirm>
-                    </span>
-                ) : (
-                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                        编辑
-                    </Typography.Link>
-                );
+                    );
             },
         },
     ];
@@ -175,7 +179,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
             <Form form={form} component={false}>
                 <Table<ReportData>
                     components={{
-                        body: { cell: EditableCell },
+                        body: {cell: EditableCell},
                     }}
                     rowSelection={{
                         type: 'checkbox',
@@ -187,7 +191,7 @@ const EditableTable: React.FC<EditableTableProps> = ({ handleSelectedLocation })
                     columns={mergedColumns}
                     rowKey="reportId"
                     rowClassName="editable-row"
-                    pagination={{ onChange: cancel }}
+                    pagination={{onChange: cancel}}
                 />
             </Form>
         </div>
