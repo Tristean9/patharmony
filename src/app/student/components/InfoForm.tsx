@@ -35,7 +35,8 @@ const InfoForm: React.FC<InfoFormProps> = ({location}) => {
             setSubmitSuccess(success);
             setSubmitError(!success);
             setSubmitMessage(message);
-        } catch (error) {
+        }
+        catch (error) {
             setSubmitMessage(axios.isAxiosError(error) ? error.response?.data?.error : '提交违停信息失败');
         }
     };

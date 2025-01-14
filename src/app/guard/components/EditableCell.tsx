@@ -21,7 +21,8 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
     if (inputType === 'number') {
         inputNode = <InputNumber />;
-    } // 如果是 “是否被核实字段”
+    }
+    // 如果是 “是否被核实字段”
     else if (dataIndex === 'confirmed') {
         inputNode = (
             <Select
@@ -29,7 +30,8 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 options={[{value: false, label: <span>否</span>}, {value: true, label: <span>是</span>}]}
             />
         );
-    } else {
+    }
+    else {
         inputNode = <Input />;
     }
 

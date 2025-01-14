@@ -51,7 +51,8 @@ const EditableTable: React.FC<EditableTableProps> = ({handleSelectedLocation}) =
             // 重置表单
             form.resetFields();
             setEditingKey('');
-        } catch (errInfo) {
+        }
+        catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };

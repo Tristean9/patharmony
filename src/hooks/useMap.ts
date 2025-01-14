@@ -17,7 +17,7 @@ export const useMap = (containerId: string) => {
 
         const {position, error} = await getCurrentLocation();
         if (error) {
-            setError('请打开定位服务，并刷新页面');
+            setError(`打开定位服务，并刷新页面。${error}`);
             setLoading(false);
             return;
         }
@@ -41,13 +41,16 @@ export const useMap = (containerId: string) => {
 
             map.current = initializedMap;
             setMapLoaded(true);
-        } catch (err) {
+        }
+        catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
-            } else {
+            }
+            else {
                 setError('An unknown error occurred 地图加载失败');
             }
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     }, [mapAPIKey, containerId]);
@@ -59,22 +62,27 @@ export const useMap = (containerId: string) => {
                 const response = await axios.get('/api/session/locationMap');
                 const {apikey} = response.data;
                 setMapAPIKey(apikey);
-            } catch (err) {
+            }
+            catch (err) {
                 let errorMessage = 'An unknown error occurred';
                 if (axios.isAxiosError(err)) {
                     // 处理 Axios 错误
                     if (err.response) {
                         errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
-                    } else if (err.request) {
+                    }
+                    else if (err.request) {
                         errorMessage = 'No response received from server';
-                    } else {
+                    }
+                    else {
                         errorMessage = err.message;
                     }
-                } else if (err instanceof Error) {
+                }
+                else if (err instanceof Error) {
                     errorMessage = err.message;
                 }
                 setError(errorMessage);
-            } finally {
+            }
+            finally {
                 setLoading(false);
             }
         };

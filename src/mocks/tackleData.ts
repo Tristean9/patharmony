@@ -53,7 +53,8 @@ export const updateReportData = (updatedReport: ReportData) => {
                 ...(updatedReport.guardRemark || []),
             ],
         };
-    } else {
+    }
+    else {
         // 添加新数据
         reportData.push(updatedReport as ReportData);
     }

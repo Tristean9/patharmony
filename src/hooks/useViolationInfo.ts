@@ -38,29 +38,35 @@ export const useViolationInfo = ({
             const {data, success, message} = response.data;
             if (success && data) {
                 setReportData(data);
-            } else {
+            }
+            else {
                 setError(message);
             }
-        } catch (err) {
+        }
+        catch (err) {
             let errorMessage = 'An unknown error occurred';
             if (axios.isAxiosError(err)) {
                 // 处理 Axios 错误
                 if (err.response) {
                     // 服务器响应了，但状态码不在 2xx 范围内
                     errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
-                } else if (err.request) {
+                }
+                else if (err.request) {
                     // 请求已经发出，但没有收到响应
                     errorMessage = 'No response received from server';
-                } else {
+                }
+                else {
                     // 设置请求时发生了错误
                     errorMessage = err.message;
                 }
-            } else if (err instanceof Error) {
+            }
+            else if (err instanceof Error) {
                 // 处理非 Axios 错误
                 errorMessage = err.message;
             }
             setError(errorMessage);
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     }, [dateFrom, dateEnd, processed]);
@@ -75,20 +81,25 @@ export const useViolationInfo = ({
             if (success) {
                 // 更新数据后重新获取数据
                 fetchData();
-            } else {
+            }
+            else {
                 setError(message);
             }
-        } catch (err) {
+        }
+        catch (err) {
             let errorMessage = 'An unknown error occurred';
             if (axios.isAxiosError(err)) {
                 if (err.response) {
                     errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
-                } else if (err.request) {
+                }
+                else if (err.request) {
                     errorMessage = 'No response received from server';
-                } else {
+                }
+                else {
                     errorMessage = err.message;
                 }
-            } else if (err instanceof Error) {
+            }
+            else if (err instanceof Error) {
                 errorMessage = err.message;
             }
             setError(errorMessage);
@@ -103,20 +114,25 @@ export const useViolationInfo = ({
             const {success, message} = response.data;
             if (success) {
                 fetchData(); // 删除数据后重新获取数据
-            } else {
+            }
+            else {
                 setError(message);
             }
-        } catch (err) {
+        }
+        catch (err) {
             let errorMessage = 'An unknown error occurred';
             if (axios.isAxiosError(err)) {
                 if (err.response) {
                     errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
-                } else if (err.request) {
+                }
+                else if (err.request) {
                     errorMessage = 'No response received from server';
-                } else {
+                }
+                else {
                     errorMessage = err.message;
                 }
-            } else if (err instanceof Error) {
+            }
+            else if (err instanceof Error) {
                 errorMessage = err.message;
             }
             setError(errorMessage);

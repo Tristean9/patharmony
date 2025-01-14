@@ -44,7 +44,8 @@ const MapContainer: React.FC<MapContainerProps> = ({setCurrentPosition}) => {
                 };
                 updatePosition(newPosition);
             });
-        } catch (error) {
+        }
+        catch (error) {
             setMapError(`打开定位服务，并刷新页面。${error}`);
         }
     }, [updatePosition, map, mapLoaded]);
