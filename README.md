@@ -2,10 +2,7 @@
 
 ## 项目结构
 
-- 使用`rsbuild`创建 `React+TypeScript` 项目
-- 使用`Redux`进行状态管理, 中间件`saga`
-- 使用`Redux-Router`进行路由管理
-- 使用`Mock Server Work`进行模拟请求
+- 使用 `next.js` 框架
 
 ## 界面说明
 
@@ -62,8 +59,7 @@ Build the app for production:
 yarn build
 ```
 
-Preview the production build locally:
-
+预览
 ```bash
-yarn preview
+yarn start
 ```
