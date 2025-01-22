@@ -42,3 +42,4 @@ next-env.d.ts
 next.config.ts
 src/mocks/data.json
 .env.production
+src/mocks/data.json

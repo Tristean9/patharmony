@@ -1,11 +1,9 @@
 import {StudentSubmitParams} from '@/app/student/components/InfoForm';
-import {updateReportData} from '@/mocks/tackleData';
+import {addReportData} from '@/lib';
 import {VehicleType} from '@/types';
 import {getNow} from '@/utils';
-import {v4 as uuidv4} from 'uuid';
 
 export async function POST(request: Request) {
-    // 手动解析 JSON 请求体
     const requestBody = await request.json();
     const {vehicleType, plateNumber, remark, location} = requestBody as StudentSubmitParams;
 
@@ -17,7 +15,7 @@ export async function POST(request: Request) {
                 message: '信息不完整，请确保填写车辆和位置字段。',
                 error: '缺少字段',
             }),
-            {status: 400, headers: {'Content-Type': 'application/json'}},
+            {status: 400, headers: {'Content-Type': 'application/json'}}
         );
     }
 
@@ -29,15 +27,14 @@ export async function POST(request: Request) {
                 message: '车辆类型无效。',
                 error: '无效的车辆类型',
             }),
-            {status: 400, headers: {'Content-Type': 'application/json'}},
+            {status: 400, headers: {'Content-Type': 'application/json'}}
         );
     }
 
     const now = getNow();
 
-    // 创建新的报告数据
+    // 创建新的反馈报告数据
     const newReport = {
-        reportId: uuidv4(),
         vehicleType: vehicleType as VehicleType,
         plateNumber: plateNumber || '',
         remark: remark || '',
@@ -48,14 +45,24 @@ export async function POST(request: Request) {
         processed: false,
     };
 
-    // 更新报告数据
-    updateReportData(newReport);
-
-    return new Response(
-        JSON.stringify({
-            success: true,
-            message: '模拟提交，反馈成功',
-        }),
-        {status: 200, headers: {'Content-Type': 'application/json'}},
-    );
+    try {
+        await addReportData(newReport);
+        return new Response(
+            JSON.stringify({
+                success: true,
+                message: '反馈成功',
+            }),
+            {status: 200, headers: {'Content-Type': 'application/json'}}
+        );
+    }
+    catch (error) {
+        return new Response(
+            JSON.stringify({
+                success: false,
+                message: '提交失败，请稍后重试。',
+                error,
+            }),
+            {status: 500, headers: {'Content-Type': 'application/json'}}
+        );
+    }
 }

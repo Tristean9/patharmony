@@ -46,7 +46,8 @@ const EditableTable: React.FC = () => {
             // 重置表单
             form.resetFields();
             setEditingKey('');
-        } catch (errInfo) {
+        }
+        catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
@@ -83,8 +84,9 @@ const EditableTable: React.FC = () => {
             editable: false,
             render: (index: number, record: ReportData) => (
                 <div>
-                    {record.guardRemark
-                        .filter((remark) => remark.trim() !== '')
+                    {record
+                        .guardRemark
+                        .filter(remark => remark.trim() !== '')
                         .map((remark, i) => <div key={i}>{remark.trim()}</div>)}
                 </div>
             ),
@@ -143,7 +145,7 @@ const EditableTable: React.FC = () => {
         },
     ];
 
-    const mergedColumns: TableProps<ReportData>['columns'] = columns.map((col) => {
+    const mergedColumns: TableProps<ReportData>['columns'] = columns.map(col => {
         if (!col.editable) {
             return col;
         }
@@ -159,8 +161,12 @@ const EditableTable: React.FC = () => {
         };
     });
 
-    if (loading) return <div>Loading API key...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) {
+        return <div>Loading API key...</div>;
+    }
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className=" mx-auto px-2">

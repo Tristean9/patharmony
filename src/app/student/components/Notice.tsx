@@ -15,7 +15,7 @@ const Notice: React.FC = () => {
             <List
                 bordered
                 dataSource={notices}
-                renderItem={(item) => (
+                renderItem={item => (
                     <List.Item>
                         <Typography.Text>{item}</Typography.Text>
                     </List.Item>

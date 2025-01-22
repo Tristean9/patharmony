@@ -2,7 +2,7 @@
 import Header from '@/components/Header';
 import {Button} from 'antd';
 import dynamic from 'next/dynamic';
-import React, {useState} from 'react';
+import {useState} from 'react';
 const EditableTable = dynamic(() => import('./components/EditableTable'), {ssr: false});
 const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
 

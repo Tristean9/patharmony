@@ -42,9 +42,9 @@ export const useMap = (containerId: string) => {
             map.current = initializedMap;
             setMapLoaded(true);
         }
-        catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
+        catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
             }
             else {
                 setError('An unknown error occurred 地图加载失败');
@@ -59,26 +59,28 @@ export const useMap = (containerId: string) => {
     useEffect(() => {
         const fetchMapAPIKey = async () => {
             try {
-                const response = await axios.get('/api/session/locationMap');
+                const response = await axios.get('/api/locationMap');
                 const {apikey} = response.data;
                 setMapAPIKey(apikey);
             }
-            catch (err) {
+            catch (error) {
                 let errorMessage = 'An unknown error occurred';
-                if (axios.isAxiosError(err)) {
+                if (axios.isAxiosError(error)) {
                     // 处理 Axios 错误
-                    if (err.response) {
-                        errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
+                    if (error.response) {
+                        errorMessage = `Server error: ${error.response.status} - ${
+                            JSON.stringify(error.response.data)
+                        }`;
                     }
-                    else if (err.request) {
+                    else if (error.request) {
                         errorMessage = 'No response received from server';
                     }
                     else {
-                        errorMessage = err.message;
+                        errorMessage = error.message;
                     }
                 }
-                else if (err instanceof Error) {
-                    errorMessage = err.message;
+                else if (error instanceof Error) {
+                    errorMessage = error.message;
                 }
                 setError(errorMessage);
             }

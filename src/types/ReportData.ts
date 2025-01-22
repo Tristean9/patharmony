@@ -1,7 +1,6 @@
 import {VehicleType} from './VehicleType';
 
-export interface ReportData {
-    reportId: string;
+export interface SubmitReportData {
     vehicleType: VehicleType;
     plateNumber: string;
     date: string;
@@ -10,4 +9,8 @@ export interface ReportData {
     location: string;
     confirmed: boolean;
     processed: boolean;
+}
+
+export interface ReportData extends SubmitReportData {
+    reportId: string;
 }

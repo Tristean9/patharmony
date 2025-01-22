@@ -11,9 +11,11 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         if (ID === 'student') {
             redirect('/student');
-        } else if (ID === 'guard') {
+        }
+        else if (ID === 'guard') {
             redirect('/guard');
-        } else if (ID === 'admin') {
+        }
+        else if (ID === 'admin') {
             redirect('/admin');
         }
     };
@@ -31,7 +33,7 @@ const LoginForm: React.FC = () => {
                     type="text"
                     id="ID"
                     value={ID}
-                    onChange={(e) => setID(e.target.value)}
+                    onChange={e => setID(e.target.value)}
                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
                     required
                 />
@@ -44,7 +46,7 @@ const LoginForm: React.FC = () => {
                     type="password"
                     id="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
                     // required
                 />

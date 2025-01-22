@@ -2,13 +2,13 @@ import {ReportData, UpdateParam} from '@/types';
 import axios from 'axios';
 import {useCallback, useEffect, useState} from 'react';
 
-export interface ViolationSubmitResponse {
+export interface SubmitReportResponse {
     success: boolean;
     message: string;
-    data?: ReportData[];
+    data?: any[];
 }
 
-export interface FetchViolationInfo {
+export interface FetchReports {
     dateFrom: string;
     dateEnd: string;
     processed?: boolean;
@@ -18,51 +18,56 @@ export const useViolationInfo = ({
     dateFrom,
     dateEnd,
     processed,
-}: FetchViolationInfo) => {
+}: FetchReports) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [reportData, setReportData] = useState<ReportData[]>([]);
 
     const fetchData = useCallback(async () => {
         try {
-            const response = await axios.get<ViolationSubmitResponse>(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/getReportList`,
+            const response = await axios.get<SubmitReportResponse>(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports/get`,
                 {
                     params: {
                         dateFrom,
                         dateEnd,
                         processed,
                     },
-                },
+                }
             );
             const {data, success, message} = response.data;
+
             if (success && data) {
-                setReportData(data);
+                const reportData = data.map(item => {
+                    const {_id, ...rest} = item;
+                    return {reportId: _id, ...rest} as ReportData;
+                });
+                setReportData(reportData);
             }
             else {
                 setError(message);
             }
         }
-        catch (err) {
+        catch (error) {
             let errorMessage = 'An unknown error occurred';
-            if (axios.isAxiosError(err)) {
+            if (axios.isAxiosError(error)) {
                 // 处理 Axios 错误
-                if (err.response) {
+                if (error.response) {
                     // 服务器响应了，但状态码不在 2xx 范围内
-                    errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
+                    errorMessage = `Server error: ${error.response.status} - ${JSON.stringify(error.response.data)}`;
                 }
-                else if (err.request) {
+                else if (error.request) {
                     // 请求已经发出，但没有收到响应
                     errorMessage = 'No response received from server';
                 }
                 else {
                     // 设置请求时发生了错误
-                    errorMessage = err.message;
+                    errorMessage = error.message;
                 }
             }
-            else if (err instanceof Error) {
+            else if (error instanceof Error) {
                 // 处理非 Axios 错误
-                errorMessage = err.message;
+                errorMessage = error.message;
             }
             setError(errorMessage);
         }
@@ -73,9 +78,9 @@ export const useViolationInfo = ({
 
     const updateData = useCallback(async (report: UpdateParam) => {
         try {
-            const response = await axios.post<ViolationSubmitResponse>(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/tackle/${report.reportId}`,
-                report,
+            const response = await axios.put<SubmitReportResponse>(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports/put`,
+                report
             );
             const {success, message} = response.data;
             if (success) {
@@ -86,21 +91,21 @@ export const useViolationInfo = ({
                 setError(message);
             }
         }
-        catch (err) {
+        catch (error) {
             let errorMessage = 'An unknown error occurred';
-            if (axios.isAxiosError(err)) {
-                if (err.response) {
-                    errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    errorMessage = `Server error: ${error.response.status} - ${JSON.stringify(error.response.data)}`;
                 }
-                else if (err.request) {
+                else if (error.request) {
                     errorMessage = 'No response received from server';
                 }
                 else {
-                    errorMessage = err.message;
+                    errorMessage = error.message;
                 }
             }
-            else if (err instanceof Error) {
-                errorMessage = err.message;
+            else if (error instanceof Error) {
+                errorMessage = error.message;
             }
             setError(errorMessage);
         }
@@ -108,8 +113,9 @@ export const useViolationInfo = ({
 
     const deleteData = useCallback(async (reportId: string) => {
         try {
-            const response = await axios.delete<ViolationSubmitResponse>(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/session/report/delete/${reportId}`,
+            const response = await axios.delete<SubmitReportResponse>(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports/delete`,
+                {params: {reportId}}
             );
             const {success, message} = response.data;
             if (success) {
@@ -119,21 +125,21 @@ export const useViolationInfo = ({
                 setError(message);
             }
         }
-        catch (err) {
+        catch (error) {
             let errorMessage = 'An unknown error occurred';
-            if (axios.isAxiosError(err)) {
-                if (err.response) {
-                    errorMessage = `Server error: ${err.response.status} - ${JSON.stringify(err.response.data)}`;
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    errorMessage = `Server error: ${error.response.status} - ${JSON.stringify(error.response.data)}`;
                 }
-                else if (err.request) {
+                else if (error.request) {
                     errorMessage = 'No response received from server';
                 }
                 else {
-                    errorMessage = err.message;
+                    errorMessage = error.message;
                 }
             }
-            else if (err instanceof Error) {
-                errorMessage = err.message;
+            else if (error instanceof Error) {
+                errorMessage = error.message;
             }
             setError(errorMessage);
         }

@@ -143,7 +143,7 @@ const EditableTable: React.FC<EditableTableProps> = ({handleSelectedLocation}) =
         });
     }
 
-    const mergedColumns: TableProps<ReportData>['columns'] = columns.map((col) => {
+    const mergedColumns: TableProps<ReportData>['columns'] = columns.map(col => {
         if (!col.editable) {
             return col;
         }
@@ -172,8 +172,12 @@ const EditableTable: React.FC<EditableTableProps> = ({handleSelectedLocation}) =
         type: 'checkbox',
     };
 
-    if (loading) return <div>Loading API key...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) {
+        return <div>Loading API key...</div>;
+    }
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="mx-auto ">
