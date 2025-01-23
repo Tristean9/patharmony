@@ -19,7 +19,7 @@ export async function getReportData(dateFrom: string, dateEnd: string, processed
             query.processed = processed;
         }
 
-        const reportData = await collection.find().toArray();
+        const reportData = await collection.find(query).toArray();
         return reportData;
     }
     catch (error) {

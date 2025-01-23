@@ -14,7 +14,7 @@ export interface FetchReports {
     processed?: boolean;
 }
 
-export const useViolationInfo = ({
+export const useReports = ({
     dateFrom,
     dateEnd,
     processed,
@@ -78,9 +78,15 @@ export const useViolationInfo = ({
 
     const updateData = useCallback(async (report: UpdateParam) => {
         try {
+            const token = localStorage.getItem('jwt');
             const response = await axios.put<SubmitReportResponse>(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports/put`,
-                report
+                report,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const {success, message} = response.data;
             if (success) {
@@ -113,9 +119,15 @@ export const useViolationInfo = ({
 
     const deleteData = useCallback(async (reportId: string) => {
         try {
+            const token = localStorage.getItem('jwt');
             const response = await axios.delete<SubmitReportResponse>(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports/delete`,
-                {params: {reportId}}
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {reportId},
+                }
             );
             const {success, message} = response.data;
             if (success) {

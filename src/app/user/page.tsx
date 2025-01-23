@@ -4,10 +4,12 @@ import dynamic from 'next/dynamic';
 import {useState} from 'react';
 import InfoForm from './components/InfoForm';
 import Notice from './components/Notice';
+import {useAuth} from '@/hooks/useAuth';
 
 const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
 
 export default function Student() {
+    useAuth('user');
     const [currentPosition, setCurrentPosition] = useState<string>('');
 
     return (

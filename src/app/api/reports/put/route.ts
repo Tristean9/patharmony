@@ -1,9 +1,20 @@
+import {NextRequest, NextResponse} from 'next/server';
 import {updateReportData} from '@/lib';
+import {authenticate, unauthorizedResponse} from '@/lib/auth';
+import {DecodedToken} from '@/types';
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
+    try {
+        const token = await authenticate(request) as DecodedToken;
+        if (token?.role !== 'admin' && token?.role !== 'guard') {
+            unauthorizedResponse();
+        }
+    }
+    catch {
+        unauthorizedResponse();
+    }
     const updatedReport = await request.json();
     const {reportId} = updatedReport;
-    console.log(`Updating report with ID: ${reportId}`);
 
     if (!reportId) {
         return new Response(
