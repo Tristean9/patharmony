@@ -1,4 +1,4 @@
-export * from './MyPosition';
+export * from './Position';
 export * from './ReportData';
 export * from './SubmitResponse';
 export * from './UpdateParam';

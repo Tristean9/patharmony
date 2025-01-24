@@ -1,2 +1,2 @@
-export * from './getCurrentLocation';
+export * from './position';
 export * from './date';

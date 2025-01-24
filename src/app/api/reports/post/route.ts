@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
     }
 
     const requestBody = await request.json();
-    const {vehicleType, plateNumber, remark, location} = requestBody as StudentSubmitParams;
+    const {vehicleType, plateNumber, remark, position} = requestBody as StudentSubmitParams;
 
     // 验证输入信息
-    if (!vehicleType || !location) {
+    if (!vehicleType || !position) {
         return NextResponse.json({
             success: false,
             message: '信息不完整，请确保填写车辆和位置字段。',
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         plateNumber: plateNumber || '',
         remark: remark || '',
         guardRemark: [''],
-        location,
+        position,
         date: now.format(),
         confirmed: false,
         processed: false,

@@ -5,12 +5,13 @@ import type {TableProps} from 'antd';
 import {Form, Popconfirm, Table, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import EditableCell from './EditableCell';
+import {Position} from '@/types';
 
 interface EditableTableProps {
-    handleSelectedLocation: (selectedData: string[]) => void;
+    handleSelectedPosition: (selectedData: Position[]) => void;
 }
 
-const EditableTable: React.FC<EditableTableProps> = ({handleSelectedLocation}) => {
+const EditableTable: React.FC<EditableTableProps> = ({handleSelectedPosition}) => {
     const [form] = Form.useForm();
 
     const now = getNow();
@@ -162,9 +163,9 @@ const EditableTable: React.FC<EditableTableProps> = ({handleSelectedLocation}) =
     const rowSelection: TableProps<ReportData>['rowSelection'] = {
         onChange: (newSelectedData: React.Key[], selectedRows: ReportData[]) => {
             // 提取被选中的数据的位置
-            const selectedLocation = selectedRows.map(item => item.location);
+            const selectedPosition = selectedRows.map(item => item.position);
             // 传递给父组件
-            handleSelectedLocation(selectedLocation);
+            handleSelectedPosition(selectedPosition);
         },
         getCheckboxProps: (record: ReportData) => ({
             name: record.reportId,

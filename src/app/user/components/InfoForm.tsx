@@ -3,20 +3,21 @@ import {SubmitResponse} from '@/types';
 import {Button, Col, Form, Input, Result, Row, Select} from 'antd';
 import type {FormProps} from 'antd';
 import axios from 'axios';
+import {Position} from '@/types';
 import {useState} from 'react';
 
 interface InfoFormProps {
-    location: string;
+    position: Position;
 }
 
 export interface StudentSubmitParams {
     vehicleType: string;
     plateNumber: string;
     remark?: string;
-    location: string;
+    position: Position;
 }
 
-const InfoForm: React.FC<InfoFormProps> = ({location}) => {
+const InfoForm: React.FC<InfoFormProps> = ({position}) => {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
@@ -24,7 +25,7 @@ const InfoForm: React.FC<InfoFormProps> = ({location}) => {
     const [form] = Form.useForm();
 
     const onFinish: FormProps['onFinish'] = async values => {
-        const submitValues: StudentSubmitParams = {...values, location};
+        const submitValues: StudentSubmitParams = {...values, position};
 
         try {
             const response = await axios.post<SubmitResponse>(

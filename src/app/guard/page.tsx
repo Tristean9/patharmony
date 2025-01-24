@@ -2,32 +2,33 @@
 import Header from '@/components/Header';
 import {Button} from 'antd';
 import dynamic from 'next/dynamic';
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {useAuth} from '@/hooks/useAuth';
+import {Position} from '@/types';
 const EditableTable = dynamic(() => import('./components/EditableTable'), {ssr: false});
 const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
 
 export default function Guard() {
     useAuth('guard');
     // 用于收到表格组件传递的数据
-    const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
+    const [selectedPosition, setSelectedPosition] = useState<Position[]>([]);
     // 用于给地图组件传递数据
-    const [locationsData, setLocationsData] = useState<string[]>([]);
+    const [positionsData, setPositionsData] = useState<Position[]>([]);
 
     // 给子组件调用的方法
-    const handleSelectedLocation = (selectedLocation: string[]) => {
-        setSelectedLocation(selectedLocation);
+    const handleSelectedPosition = (selectedLocation: Position[]) => {
+        setSelectedPosition(selectedLocation);
     };
 
     const handleLocationAddMarker = () => {
-        setLocationsData(selectedLocation);
+        setPositionsData(selectedPosition);
     };
 
     return (
         <div>
             <Header title="违停情况保安员确认页面" />
             <div className="px-6">
-                <EditableTable handleSelectedLocation={handleSelectedLocation} />
+                <EditableTable handleSelectedPosition={handleSelectedPosition} />
                 <Button
                     type="primary"
                     className="bg-customRed"
@@ -35,7 +36,7 @@ export default function Guard() {
                 >
                     将选中的记录显示在地图上
                 </Button>
-                <MapContainer locationsData={locationsData} />
+                <MapContainer positionsData={positionsData} />
             </div>
         </div>
     );

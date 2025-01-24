@@ -1,4 +1,4 @@
-import {getCurrentLocation} from '@/utils';
+import {getCurrentPosition} from '@/utils';
 import AMapLoader from '@amap/amap-jsapi-loader';
 import axios from 'axios';
 import {useCallback, useEffect, useRef, useState} from 'react';
@@ -15,16 +15,12 @@ export const useMap = (containerId: string) => {
             return;
         }
 
-        const {position, error} = await getCurrentLocation();
+        const {position, error} = await getCurrentPosition();
         if (error) {
             setError(`打开定位服务，并刷新页面。${error}`);
             setLoading(false);
             return;
         }
-        const initPosition = [
-            position?.longitude ?? 116.308303,
-            position?.latitude ?? 39.988792,
-        ];
 
         try {
             const AMap = await AMapLoader.load({
@@ -36,7 +32,7 @@ export const useMap = (containerId: string) => {
             const initializedMap: AMap.Map = new AMap.Map(containerId, {
                 viewMode: '2D',
                 zoom: 15,
-                center: initPosition,
+                center: position,
             });
 
             map.current = initializedMap;
@@ -59,7 +55,7 @@ export const useMap = (containerId: string) => {
     useEffect(() => {
         const fetchMapAPIKey = async () => {
             try {
-                const response = await axios.get('/api/locationMap');
+                const response = await axios.get('/api/map');
                 const {apikey} = response.data;
                 setMapAPIKey(apikey);
             }

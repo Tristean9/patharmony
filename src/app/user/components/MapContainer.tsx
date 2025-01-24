@@ -2,22 +2,20 @@
 import {useCallback, useEffect, useState} from 'react';
 import '@amap/amap-jsapi-types';
 import {useMap} from '@/hooks/';
-import {MyPosition} from '@/types';
+import {Position} from '@/types';
 import {Alert} from 'antd';
 
 interface MapContainerProps {
-    setCurrentPosition: (position: string) => void;
+    setCurrentPosition: (position: Position) => void;
 }
 
 const MapContainer: React.FC<MapContainerProps> = ({setCurrentPosition}) => {
-    const [, setPosition] = useState<MyPosition | null>(null);
     const {map, loading, error, mapLoaded} = useMap('map-container');
     const [mapError, setMapError] = useState<string | null>(null);
 
-    const updatePosition = useCallback((newPosition: MyPosition) => {
-        setPosition(newPosition);
-        setCurrentPosition(`${newPosition.latitude}°,${newPosition.longitude}°`);
-    }, [setCurrentPosition, setPosition]);
+    const updatePosition = useCallback((newPosition: Position) => {
+        setCurrentPosition(newPosition);
+    }, [setCurrentPosition]);
 
     const updateMarker = useCallback(async () => {
         if (typeof window === 'undefined' || !mapLoaded) {
@@ -31,17 +29,20 @@ const MapContainer: React.FC<MapContainerProps> = ({setCurrentPosition}) => {
                 title: '当前位置',
                 draggable: true,
             });
-
-            updatePosition({latitude: center.getLat(), longitude: center.getLng()});
+            const initialPosition = [
+                center.getLng() ?? 116.308303,
+                center.getLat() ?? 39.988792,
+            ] as Position;
+            updatePosition(initialPosition);
 
             (map.current as AMap.Map).add(marker);
             // 给 marker 添加事件监听，拖拽后更新位置
             marker.on('dragend', () => {
                 const markerPos = marker.getPosition() as AMap.LngLat;
-                const newPosition = {
-                    latitude: markerPos.getLat(),
-                    longitude: markerPos.getLng(),
-                };
+                const newPosition = [
+                    markerPos.getLng() ?? 116.308303,
+                    markerPos.getLat() ?? 39.988792,
+                ] as Position;
                 updatePosition(newPosition);
             });
         }

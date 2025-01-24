@@ -1,3 +1,4 @@
+import { Position } from './Position';
 import {VehicleType} from './VehicleType';
 
 export interface SubmitReportData {
@@ -6,7 +7,7 @@ export interface SubmitReportData {
     date: string;
     remark: string;
     guardRemark: string[];
-    location: string;
+    position: Position;
     confirmed: boolean;
     processed: boolean;
 }
