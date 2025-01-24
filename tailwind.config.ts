@@ -16,4 +16,5 @@ export default {
         },
     },
     plugins: [],
+    'headwind.runOnSave': false,
 } satisfies Config;

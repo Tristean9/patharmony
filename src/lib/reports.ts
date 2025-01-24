@@ -2,14 +2,11 @@ import {ObjectId} from 'mongodb';
 import clientPromise from './mongodb';
 import {SubmitReportData, ReportData} from '@/types';
 
-export async function getReportData(dateFrom: string, dateEnd: string, processed?: boolean): Promise<ReportData[]> {
+export async function getReportData(fromDate: string, endDate: string, processed?: boolean): Promise<ReportData[]> {
     try {
         const client = await clientPromise;
         const db = client.db();
         const collection = db.collection<ReportData>('reports');
-
-        const fromDate = new Date(dateFrom);
-        const endDate = new Date(dateEnd);
 
         const query: any = {
             date: {$gte: fromDate, $lte: endDate},

@@ -1,4 +1,4 @@
-import {useViolationInfo} from '@/hooks';
+import {useReports} from '@/hooks';
 import {ReportData, UpdateParam} from '@/types';
 import {getNow} from '@/utils';
 import type {TableProps} from 'antd';
@@ -10,9 +10,9 @@ const EditableTable: React.FC = () => {
     const [form] = Form.useForm();
 
     const now = getNow();
-    const {reportData, error, loading, updateData, deleteData} = useViolationInfo({
-        dateFrom: '2024-12-01T00:00:00',
-        dateEnd: `${now.format('YYYY-MM-DD')}T23:59:59`,
+    const {reportData, error, loading, updateData, deleteData} = useReports({
+        dateFrom: '2025-01-01T00:00:00+08:00',
+        dateEnd: now.format(),
     });
     const [data, setData] = useState<ReportData[]>(reportData);
 
