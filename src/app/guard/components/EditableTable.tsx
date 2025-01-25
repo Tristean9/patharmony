@@ -11,7 +11,7 @@ interface EditableTableProps {
     handleSelectedPosition: (selectedData: Position[]) => void;
 }
 
-const EditableTable: React.FC<EditableTableProps> = ({handleSelectedPosition}) => {
+export default function EditableTable({handleSelectedPosition}: EditableTableProps) {
     const [form] = Form.useForm();
 
     const now = getNow();
@@ -202,6 +202,4 @@ const EditableTable: React.FC<EditableTableProps> = ({handleSelectedPosition}) =
             </Form>
         </div>
     );
-};
-
-export default EditableTable;
+}

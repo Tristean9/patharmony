@@ -2,10 +2,10 @@ import Image from 'next/image';
 import React from 'react';
 import LogoutButton from './LogoutButton';
 
-interface Props {
+interface HeaderProps {
     title: string;
 }
-const Header: React.FC<Props> = ({title}) => {
+export default function Header({title}: HeaderProps) {
     return (
         <div className="flex items-center justify-around h-10 p-4 text-white md:h-20 bg-customRed ">
             <div className="text-xl md:text-3xl">
@@ -25,6 +25,4 @@ const Header: React.FC<Props> = ({title}) => {
             </div>
         </div>
     );
-};
-
-export default Header;
+}

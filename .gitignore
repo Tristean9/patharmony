@@ -39,7 +39,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 界面设计_pht.pdf
-next.config.ts
 src/mocks/data.json
 .env.production
 src/mocks/data.json

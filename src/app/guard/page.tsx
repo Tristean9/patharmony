@@ -15,11 +15,6 @@ export default function Guard() {
     // 用于给地图组件传递数据
     const [positionsData, setPositionsData] = useState<Position[]>([]);
 
-    // 给子组件调用的方法
-    const handleSelectedPosition = (selectedLocation: Position[]) => {
-        setSelectedPosition(selectedLocation);
-    };
-
     const handleLocationAddMarker = () => {
         setPositionsData(selectedPosition);
     };
@@ -28,7 +23,7 @@ export default function Guard() {
         <div>
             <Header title="违停情况保安员确认页面" />
             <div className="px-6">
-                <EditableTable handleSelectedPosition={handleSelectedPosition} />
+                <EditableTable handleSelectedPosition={setSelectedPosition} />
                 <Button
                     type="primary"
                     className="bg-customRed"

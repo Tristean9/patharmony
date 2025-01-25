@@ -10,13 +10,13 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     index: number;
 }
 
-const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
+export default function EditableCell({
     editing,
     dataIndex,
     inputType,
     children,
     ...restProps
-}) => {
+}: React.PropsWithChildren<EditableCellProps>) {
     let inputNode;
 
     if (inputType === 'number') {
@@ -49,6 +49,4 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                 : children}
         </td>
     );
-};
-
-export default EditableCell;
+}

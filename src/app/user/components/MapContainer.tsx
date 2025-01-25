@@ -9,7 +9,7 @@ interface MapContainerProps {
     setCurrentPosition: (position: Position) => void;
 }
 
-const MapContainer: React.FC<MapContainerProps> = ({setCurrentPosition}) => {
+export default function MapContainer({setCurrentPosition}: MapContainerProps) {
     const {map, loading, error, mapLoaded} = useMap('map-container');
     const [mapError, setMapError] = useState<string | null>(null);
 
@@ -76,6 +76,4 @@ const MapContainer: React.FC<MapContainerProps> = ({setCurrentPosition}) => {
             </div>
         </div>
     );
-};
-
-export default MapContainer;
+}

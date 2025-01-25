@@ -6,7 +6,7 @@ import {Button, Form, Popconfirm, Table, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import EditableCell from './EditableCell';
 
-const EditableTable: React.FC = () => {
+export default function EditableTable() {
     const [form] = Form.useForm();
 
     const now = getNow();
@@ -185,6 +185,4 @@ const EditableTable: React.FC = () => {
             </Form>
         </div>
     );
-};
-
-export default EditableTable;
+}

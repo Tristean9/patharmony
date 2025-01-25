@@ -1,9 +1,9 @@
 'use client';
 import {signIn, getSession} from 'next-auth/react';
-import {useEffect} from 'react';
+import {useEffect, Suspense} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
 
-export default function Login() {
+function Login() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -72,5 +72,13 @@ export default function Login() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Login />
+        </Suspense>
     );
 }

@@ -1,7 +1,7 @@
 import {List, Typography} from 'antd';
 import React from 'react';
 
-const Notice: React.FC = () => {
+export default function Notice() {
     const notices = [
         '如果地图没有显示，请确保打开定位服务',
         '请确保定位精准',
@@ -23,6 +23,4 @@ const Notice: React.FC = () => {
             />
         </div>
     );
-};
-
-export default Notice;
+}

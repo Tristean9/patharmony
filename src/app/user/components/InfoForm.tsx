@@ -17,7 +17,7 @@ export interface StudentSubmitParams {
     position: Position;
 }
 
-const InfoForm: React.FC<InfoFormProps> = ({position}) => {
+export default function InfoForm({position}: InfoFormProps) {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
@@ -145,6 +145,4 @@ const InfoForm: React.FC<InfoFormProps> = ({position}) => {
             {showError()}
         </div>
     );
-};
-
-export default InfoForm;
+}

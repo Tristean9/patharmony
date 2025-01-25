@@ -8,7 +8,7 @@ interface MapContainerProps {
     positionsData: Position[];
 }
 
-const MapContainer: React.FC<MapContainerProps> = ({positionsData}) => {
+export default function MapContainer({positionsData}: MapContainerProps) {
     const markersRef = useRef<AMap.Marker[]>([]);
     const {map, loading, error, mapLoaded} = useMap('map-container');
 
@@ -68,6 +68,4 @@ const MapContainer: React.FC<MapContainerProps> = ({positionsData}) => {
             </div>
         </div>
     );
-};
-
-export default MapContainer;
+}
