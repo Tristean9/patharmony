@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 北大校园违停情况描述提交处理平台
 
-## Getting Started
+## 项目结构
 
-First, run the development server:
+- 使用 `next.js` 框架
+
+## 界面说明
+
+界面一：学生用户提交违停情况反馈页面
+元素：
+输入框：描述违停情况
+选择框：车辆类型（自行车、电动车、机动车）
+按钮：提交信息
+地图标注功能：标注违停地点
+车牌号输入框：用于匹配车主身份
+提示信息：关于违停概念的说明
+隐私保护说明：关于保护车主隐私的提示
+
+界面二：保安员确认违停情况页面
+元素：
+信息展示：展示学生提交的违停情况描述、地点
+确认按钮：确认情况属实
+图片上传功能：上传实地确认图片
+文本框：反馈系统信息
+通知保安算法按钮：自动通知附近保安员按钮
+
+界面三：中控处理违停情况页面
+元素：
+信息查看：查看所有信息（学生反馈、保安反馈、车主身份）
+提醒车主按钮：提醒车主挪车/通知有关部门
+解决情况反馈：反馈信息给学生
+查看权限设置：设置各主体的信息查看权限
+
+界面四：登录页面
+元素：
+用户名输入框
+密码输入框
+登录按钮
+
+## Setup
+
+Install the dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Get Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Start the dev server:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+yarn dev
+```
 
-## Learn More
+Build the app for production:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+yarn build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+预览
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+yarn start
+```
