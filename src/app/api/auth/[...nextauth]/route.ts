@@ -21,16 +21,21 @@ const handler = NextAuth({
                 // 如果 token 是 JWT，则验证 JWT
                 try {
                     const decoded = verify(token as string, process.env.JWT_SECRET as string) as DecodedToken;
-                    return {
-                        id: decoded.id,
-                        role: decoded.role,
-                        jwt: token,
-                    };
+                    if (['user', 'guard', 'admin'].includes(decoded.role)) {
+                        return {
+                            id: decoded.id,
+                            role: decoded.role,
+                            jwt: token,
+                        };
+                    }
+                    else {
+                        return null;
+                    }
                 }
                 catch (error) {
                     // 如果 token 不是 JWT，则根据 role 生成 JWT
                     const user = await verifyThirdPartyToken(token);
-                    if (user) {
+                    if (user && ['user', 'guard', 'admin'].includes(user.role)) {
                         return user;
                     }
                     else {

@@ -12,13 +12,13 @@ function Login() {
             const session = await getSession();
             const role = searchParams.get('patharmonyRole');
 
-            if (session) {
-                // 如果有 JWT，直接进行鉴权
-                handleAuthentication(session.user.jwt);
-            }
-            else if (role) {
+            if (role) {
                 // 如果有 patharmonyRole，根据角色验证第三方令牌，进行鉴权
                 handleAuthentication(role);
+            }
+            else if (session) {
+                // 如果有 JWT，直接进行鉴权
+                handleAuthentication(session.user.jwt);
             }
         };
         checkAuth();
@@ -34,15 +34,7 @@ function Login() {
             // 登录成功，JWT 会自动存储在客户端浏览器中
             const session = await getSession();
             const role = session?.user?.role;
-            if (role === 'user') {
-                router.push('/user');
-            }
-            else if (role === 'guard') {
-                router.push('/guard');
-            }
-            else if (role === 'admin') {
-                router.push('/admin');
-            }
+            router.push(`/${role}`);
         }
         else {
             console.error('鉴权失败');
@@ -50,15 +42,21 @@ function Login() {
     };
 
     const handleUserLogin = () => {
-        window.location.href = `http://localhost:3001/?ref=${encodeURIComponent(window.location.href)}`;
+        window.location.href = `${process.env.NEXT_PUBLIC_THIRD_PARTY_API_BASE_URL}/?ref=${
+            encodeURIComponent(window.location.href)
+        }`;
     };
 
     const handleGuardLogin = () => {
-        window.location.href = `http://localhost:3001/?ref=${encodeURIComponent(window.location.href)}`;
+        window.location.href = `${process.env.NEXT_PUBLIC_THIRD_PARTY_API_BASE_URL}/?ref=${
+            encodeURIComponent(window.location.href)
+        }`;
     };
 
     const handleAdminLogin = () => {
-        window.location.href = `http://localhost:3001/?ref=${encodeURIComponent(window.location.href)}`;
+        window.location.href = `${process.env.NEXT_PUBLIC_THIRD_PARTY_API_BASE_URL}/?ref=${
+            encodeURIComponent(window.location.href)
+        }`;
     };
 
     return (
