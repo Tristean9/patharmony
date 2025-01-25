@@ -47,6 +47,7 @@ const handler = NextAuth({
         secret: process.env.JWT_SECRET,
         maxAge: 7 * 24 * 60 * 60, // JWT 有效期为一周（7 天）
     },
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({token, user}) {
             if (user) {
