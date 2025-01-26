@@ -3,7 +3,8 @@ import {useCallback, useEffect, useState} from 'react';
 import '@amap/amap-jsapi-types';
 import {useMap} from '@/hooks/';
 import {Position} from '@/types';
-import {Alert} from 'antd';
+import {AlertCircle} from 'lucide-react';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 
 interface MapContainerProps {
     setCurrentPosition: (position: Position) => void;
@@ -58,13 +59,31 @@ export default function MapContainer({setCurrentPosition}: MapContainerProps) {
     if (loading) {
         return <div>Loading map...</div>;
     }
+
     if (mapError) {
-        return <Alert message={mapError} type="error" closable />;
+        return (
+            <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    {mapError}
+                </AlertDescription>
+            </Alert>
+        );
     }
 
     if (error) {
-        return <Alert message={error} type="warning" closable />;
+        return (
+            <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    {error}
+                </AlertDescription>
+            </Alert>
+        );
     }
+
     return (
         <div>
             <div className="font-medium">请拖拽地图或移动标记，确定提交的违停精确位置</div>

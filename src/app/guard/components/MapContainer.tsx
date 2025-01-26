@@ -2,7 +2,8 @@ import {useCallback, useEffect, useRef} from 'react';
 import '@amap/amap-jsapi-types';
 import {useMap} from '@/hooks';
 import {Position} from '@/types';
-import {Alert} from 'antd';
+import {AlertCircle} from 'lucide-react';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 
 interface MapContainerProps {
     positionsData: Position[];
@@ -56,14 +57,21 @@ export default function MapContainer({positionsData}: MapContainerProps) {
         return <div>loading...</div>;
     }
     if (error) {
-        return <Alert message="Error" description={error} type="error" showIcon />;
+        return (
+            <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    {error}
+                </AlertDescription>
+            </Alert>
+        );
     }
     return (
         <div>
             <div
-                className="mt-6"
                 id="map-container"
-                style={{height: '500px'}}
+                className="mt-6 z-10 min-h-[500px] h-[30vh]"
             >
             </div>
         </div>
