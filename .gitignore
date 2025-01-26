@@ -40,5 +40,5 @@ yarn-error.log*
 next-env.d.ts
 界面设计_pht.pdf
 src/mocks/data.json
-.env.production
+.env.*
 src/mocks/data.json

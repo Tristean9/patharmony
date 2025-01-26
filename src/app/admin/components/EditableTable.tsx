@@ -1,6 +1,6 @@
 import {useReports} from '@/hooks';
 import {ReportData, UpdateParam} from '@/types';
-import {getNow} from '@/utils';
+import {formatDisplayDateTime, getNow} from '@/utils';
 import type {TableProps} from 'antd';
 import {Button, Form, Popconfirm, Table, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
@@ -17,6 +17,8 @@ export default function EditableTable() {
     const [data, setData] = useState<ReportData[]>(reportData);
 
     useEffect(() => {
+        console.log('reportData:', reportData);
+
         setData(reportData);
     }, [reportData]);
 
@@ -56,8 +58,15 @@ export default function EditableTable() {
         {
             title: '反馈信息ID',
             dataIndex: 'reportId',
-            width: '15%',
+            width: '10%',
             editable: false,
+        },
+        {
+            title: '反馈日期',
+            dataIndex: 'date',
+            width: '10%',
+            editable: false,
+            render: (index: number, record: ReportData) => <span>{formatDisplayDateTime(record.date)}</span>,
         },
         {
             title: '车辆类型',
@@ -103,23 +112,25 @@ export default function EditableTable() {
             dataIndex: 'processed',
             width: '5%',
             editable: false,
-            render: (index: number, record: ReportData) => <span>{index} {record.processed ? '是' : '否'}</span>,
+            render: (index: number, record: ReportData) => <span>{record.processed ? '是' : '否'}</span>,
         },
         {
             title: '编辑',
             dataIndex: 'operation',
-            width: '5%',
+            width: '6%',
             render: (index: number, record: ReportData) => {
                 const editable = isEditing(record);
                 return editable
                     ? (
                         <span>
-                            <Typography.Link onClick={() => save(record)} style={{marginInlineEnd: 8}}>
-                                保存
-                            </Typography.Link>
-                            <Popconfirm title="确定取消?" onConfirm={cancel}>
-                                <a>取消</a>
-                            </Popconfirm>
+                            <div className="flex gap-1">
+                                <Typography.Link onClick={() => save(record)}>
+                                    保存
+                                </Typography.Link>
+                                <Typography.Link onClick={cancel}>
+                                    取消
+                                </Typography.Link>
+                            </div>
                         </span>
                     )
                     : (

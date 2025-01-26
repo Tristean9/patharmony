@@ -31,6 +31,15 @@ export default function EditableCell({
             />
         );
     }
+    // 如果是 “是否被处理字段”
+    else if (dataIndex === 'processed') {
+        inputNode = (
+            <Select
+                defaultValue={false}
+                options={[{value: false, label: <span>否</span>}, {value: true, label: <span>是</span>}]}
+            />
+        );
+    }
     else {
         inputNode = <Input />;
     }
