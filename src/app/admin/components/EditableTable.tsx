@@ -17,8 +17,6 @@ export default function EditableTable() {
     const [data, setData] = useState<ReportData[]>(reportData);
 
     useEffect(() => {
-        console.log('reportData:', reportData);
-
         setData(reportData);
     }, [reportData]);
 

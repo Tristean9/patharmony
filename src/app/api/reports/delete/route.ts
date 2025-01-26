@@ -16,7 +16,6 @@ export async function DELETE(request: NextRequest) {
 
     const url = new URL(request.url);
     const reportId = url.searchParams.get('reportId');
-    console.log(`Deleting report with ID: ${reportId}`);
 
     if (reportId) {
         try {

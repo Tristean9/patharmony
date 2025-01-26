@@ -3,15 +3,12 @@ import {ReportData, UpdateParam} from '@/types';
 import {getNow} from '@/utils';
 import type {TableProps} from 'antd';
 import {Form, Popconfirm, Table, Typography} from 'antd';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import EditableCell from './EditableCell';
-import {Position} from '@/types';
+import {PositionsContext} from '../page';
 
-interface EditableTableProps {
-    handleSelectedPosition: (selectedData: Position[]) => void;
-}
-
-export default function EditableTable({handleSelectedPosition}: EditableTableProps) {
+export default function EditableTable() {
+    const {updateSelectedPositions} = useContext(PositionsContext);
     const [form] = Form.useForm();
 
     const now = getNow();
@@ -165,7 +162,7 @@ export default function EditableTable({handleSelectedPosition}: EditableTablePro
             // 提取被选中的数据的位置
             const selectedPosition = selectedRows.map(item => item.position);
             // 传递给父组件
-            handleSelectedPosition(selectedPosition);
+            updateSelectedPositions(selectedPosition);
         },
         getCheckboxProps: (record: ReportData) => ({
             name: record.reportId,

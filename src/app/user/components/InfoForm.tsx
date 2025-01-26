@@ -4,11 +4,8 @@ import {Button, Col, Form, Input, Result, Row, Select} from 'antd';
 import type {FormProps} from 'antd';
 import axios from 'axios';
 import {Position} from '@/types';
-import {useState} from 'react';
-
-interface InfoFormProps {
-    position: Position;
-}
+import {useContext, useState} from 'react';
+import {PositionContext} from '../page';
 
 export interface StudentSubmitParams {
     vehicleType: string;
@@ -17,15 +14,16 @@ export interface StudentSubmitParams {
     position: Position;
 }
 
-export default function InfoForm({position}: InfoFormProps) {
+export default function InfoForm() {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+    const {currentPosition} = useContext(PositionContext);
 
     const [form] = Form.useForm();
 
     const onFinish: FormProps['onFinish'] = async values => {
-        const submitValues: StudentSubmitParams = {...values, position};
+        const submitValues: StudentSubmitParams = {...values, position: currentPosition};
 
         try {
             const response = await axios.post<SubmitResponse>(
