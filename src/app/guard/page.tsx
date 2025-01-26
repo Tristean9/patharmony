@@ -1,6 +1,6 @@
 'use client';
 import Header from '@/components/Header';
-import {Button} from 'antd';
+import {Button} from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import {useState} from 'react';
 import {useAuth} from '@/hooks/useAuth';
@@ -25,7 +25,6 @@ export default function Guard() {
             <div className="px-6">
                 <EditableTable handleSelectedPosition={setSelectedPosition} />
                 <Button
-                    type="primary"
                     className="bg-customRed"
                     onClick={handleLocationAddMarker}
                 >
