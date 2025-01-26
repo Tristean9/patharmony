@@ -70,8 +70,7 @@ export default function MapContainer({setCurrentPosition}: MapContainerProps) {
             <div className="font-medium">请拖拽地图或移动标记，确定提交的违停精确位置</div>
             <div
                 id="map-container"
-                className={'map-container'}
-                style={{height: '350px'}}
+                className="z-10 min-h-[200px] h-[30vh]"
             >
             </div>
         </div>

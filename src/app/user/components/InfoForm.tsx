@@ -5,6 +5,15 @@ import type {FormProps} from 'antd';
 import axios from 'axios';
 import {Position} from '@/types';
 import {useState} from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface InfoFormProps {
     position: Position;
@@ -57,12 +66,19 @@ export default function InfoForm({position}: InfoFormProps) {
         if (submitSuccess) {
             return (
                 <>
-                    <Result
-                        status="success"
-                        title="提交成功"
-                        subTitle={submitMessage}
-                        extra={<Button type="primary" onClick={handleRetry}>返回再次提交</Button>}
-                    />
+                    <AlertDialog open={submitSuccess}>
+                        <AlertDialogContent className="max-w-[80vw] rounded-sm">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>提交成功</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    {submitMessage}
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogAction onClick={handleRetry}>返回再次提交</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </>
             );
         }
@@ -72,12 +88,19 @@ export default function InfoForm({position}: InfoFormProps) {
         if (submitError) {
             return (
                 <>
-                    <Result
-                        status="error"
-                        title="提交失败"
-                        subTitle={submitMessage}
-                        extra={<Button type="primary" onClick={handleFixAndResubmit} danger>完善信息，再次提交</Button>}
-                    />
+                    <AlertDialog open={submitError}>
+                        <AlertDialogContent className="max-w-[80vw] rounded-sm">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>提交失败</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    {submitMessage}
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogAction onClick={handleFixAndResubmit}>完善信息，再次提交</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </>
             );
         }
