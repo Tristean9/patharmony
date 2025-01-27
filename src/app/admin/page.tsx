@@ -1,19 +1,9 @@
 'use client';
 import Header from '@/components/Header';
+import {AdminContext} from '@/contexts';
 import {useAuth, useReports} from '@/hooks';
-import {UpdateParam} from '@/types';
 import {getNow} from '@/utils';
-import {createContext} from 'react';
 import {columns, DataTable} from './components/table';
-export interface AdminContextType {
-    updateData: (report: UpdateParam) => Promise<void>;
-    deleteData: (reportId: string) => Promise<void>;
-}
-
-export const AdminContext = createContext<AdminContextType>({
-    updateData: async () => {},
-    deleteData: async () => {},
-});
 
 export default function Admin() {
     useAuth('admin');

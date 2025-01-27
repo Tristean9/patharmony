@@ -2,15 +2,15 @@
 import {useCallback, useContext, useEffect, useState} from 'react';
 import '@amap/amap-jsapi-types';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {UserContext} from '@/contexts';
 import {useMap} from '@/hooks/';
 import {Position} from '@/types';
 import {AlertCircle} from 'lucide-react';
-import {PositionContext} from '../page';
 
 export default function MapContainer() {
     const {map, loading, error, mapLoaded} = useMap('map-container');
     const [mapError, setMapError] = useState<string | null>(null);
-    const {updateCurrentPosition} = useContext(PositionContext);
+    const {updateCurrentPosition} = useContext(UserContext);
 
     const updateMarker = useCallback(async () => {
         if (typeof window === 'undefined' || !mapLoaded) {

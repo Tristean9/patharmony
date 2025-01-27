@@ -1,6 +1,7 @@
 'use client';
 import {Button} from '@/components/ui/button';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import {GuardContext} from '@/contexts';
 import {ReportData} from '@/types';
 import {
     ColumnDef,
@@ -11,7 +12,6 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import {useContext, useEffect, useState} from 'react';
-import {GuardContext} from '../../page';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];

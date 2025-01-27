@@ -13,13 +13,13 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/
 import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {Textarea} from '@/components/ui/textarea';
+import {UserContext} from '@/contexts';
 import {Position, SubmitResponse, VehicleType} from '@/types';
 import {zodResolver} from '@hookform/resolvers/zod';
 import axios from 'axios';
 import {useContext, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
-import {PositionContext} from '../page';
 
 export interface UserSubmitParams {
     vehicleType: VehicleType;
@@ -38,7 +38,7 @@ export default function InfoForm() {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
-    const {currentPosition} = useContext(PositionContext);
+    const {currentPosition} = useContext(UserContext);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

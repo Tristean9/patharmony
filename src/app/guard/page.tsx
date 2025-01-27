@@ -1,24 +1,13 @@
 'use client';
 import Header from '@/components/Header';
+import {GuardContext} from '@/contexts';
 import {useAuth, useReports} from '@/hooks';
-import {Position, UpdateParam} from '@/types';
+import {Position} from '@/types';
 import {getNow} from '@/utils';
 import dynamic from 'next/dynamic';
-import {createContext, useState} from 'react';
+import {useState} from 'react';
 import {columns, DataTable} from './components/table';
 const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
-
-export interface GuardContextType {
-    selectedPositions: Position[];
-    updateSelectedPositions: (newPosition: Position[]) => void;
-    updateData: (report: UpdateParam) => Promise<void>;
-}
-
-export const GuardContext = createContext<GuardContextType>({
-    selectedPositions: [],
-    updateSelectedPositions: () => {},
-    updateData: async () => {},
-});
 
 export default function Guard() {
     useAuth('guard');

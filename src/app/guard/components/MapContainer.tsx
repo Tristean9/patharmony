@@ -1,10 +1,11 @@
+'use client';
 import {useCallback, useContext, useEffect, useRef} from 'react';
 import '@amap/amap-jsapi-types';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {GuardContext} from '@/contexts';
 import {useMap} from '@/hooks';
 import {Position} from '@/types';
 import {AlertCircle} from 'lucide-react';
-import {GuardContext} from '../page';
 
 export default function MapContainer() {
     const {selectedPositions} = useContext(GuardContext);
