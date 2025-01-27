@@ -1,13 +1,13 @@
-import {useCallback, useEffect, useRef, useContext} from 'react';
+import {useCallback, useContext, useEffect, useRef} from 'react';
 import '@amap/amap-jsapi-types';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {useMap} from '@/hooks';
 import {Position} from '@/types';
 import {AlertCircle} from 'lucide-react';
-import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
-import {PositionsContext} from '../page';
+import {GuardContext} from '../page';
 
 export default function MapContainer() {
-    const {selectedPositions} = useContext(PositionsContext);
+    const {selectedPositions} = useContext(GuardContext);
     const markersRef = useRef<AMap.Marker[]>([]);
     const {map, loading, error, mapLoaded} = useMap('map-container');
 

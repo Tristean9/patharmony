@@ -1,11 +1,11 @@
 'use client';
 import Header from '@/components/Header';
-import dynamic from 'next/dynamic';
-import {useState, createContext} from 'react';
-import InfoForm from './components/InfoForm';
-import Notice from './components/Notice';
 import {useAuth} from '@/hooks/useAuth';
 import {Position} from '@/types';
+import dynamic from 'next/dynamic';
+import {createContext, useState} from 'react';
+import InfoForm from './components/InfoForm';
+import Notice from './components/Notice';
 const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
 
 export interface PositionContextType {

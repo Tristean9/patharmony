@@ -1,7 +1,7 @@
-import {NextRequest, NextResponse} from 'next/server';
 import {getReportData} from '@/lib';
 import {authenticate, unauthorizedResponse} from '@/lib/auth';
 import {DecodedToken} from '@/types';
+import {NextRequest, NextResponse} from 'next/server';
 
 export async function GET(request: NextRequest) {
     try {

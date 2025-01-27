@@ -1,6 +1,6 @@
-import {NextRequest, NextResponse} from 'next/server';
-import {verify, sign} from 'jsonwebtoken';
 import {DecodedToken} from '@/types';
+import {sign, verify} from 'jsonwebtoken';
+import {NextRequest, NextResponse} from 'next/server';
 
 export async function authenticate(req: NextRequest) {
     const token = req.cookies.get('jwt');

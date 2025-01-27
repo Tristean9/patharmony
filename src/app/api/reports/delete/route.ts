@@ -1,7 +1,7 @@
-import {NextRequest, NextResponse} from 'next/server';
 import {deleteReportData} from '@/lib';
 import {authenticate, unauthorizedResponse} from '@/lib/auth';
 import {DecodedToken} from '@/types';
+import {NextRequest, NextResponse} from 'next/server';
 
 export async function DELETE(request: NextRequest) {
     try {

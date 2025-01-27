@@ -1,38 +1,52 @@
 'use client';
 import Header from '@/components/Header';
+import {useAuth, useReports} from '@/hooks';
+import {Position, UpdateParam} from '@/types';
+import {getNow} from '@/utils';
 import dynamic from 'next/dynamic';
-import {useState, createContext} from 'react';
-import {useAuth} from '@/hooks/useAuth';
-import {Position} from '@/types';
-const EditableTable = dynamic(() => import('./components/EditableTable'), {ssr: false});
+import {createContext, useState} from 'react';
+import {columns, DataTable} from './components/table';
 const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
 
-export interface PositionsContextType {
+export interface GuardContextType {
     selectedPositions: Position[];
     updateSelectedPositions: (newPosition: Position[]) => void;
+    updateData: (report: UpdateParam) => Promise<void>;
 }
 
-export const PositionsContext = createContext<PositionsContextType>({
+export const GuardContext = createContext<GuardContextType>({
     selectedPositions: [],
     updateSelectedPositions: () => {},
+    updateData: async () => {},
 });
 
 export default function Guard() {
     useAuth('guard');
+    const now = getNow();
+    const {reportData, error, loading, updateData} = useReports({
+        dateFrom: now.startOf('day').format(),
+        dateEnd: now.endOf('day').format(),
+        processed: false,
+    });
     const [selectedPositions, setSelectedPositions] = useState<Position[]>([]);
 
     return (
-        <PositionsContext.Provider value={{selectedPositions, updateSelectedPositions: setSelectedPositions}}>
+        <GuardContext.Provider value={{selectedPositions, updateSelectedPositions: setSelectedPositions, updateData}}>
             <div>
                 <Header title="违停情况保安员确认页面" />
                 <div className="px-6">
-                    <EditableTable />
+                    <div className="container mx-auto py-10">
+                        {loading && <div>loading...</div>}
+                        {error
+                            ? <div>{error}</div>
+                            : <DataTable columns={columns} data={reportData} />}
+                    </div>
                     <div>
                         被选中的记录将会自动显示在地图上
                     </div>
                     <MapContainer />
                 </div>
             </div>
-        </PositionsContext.Provider>
+        </GuardContext.Provider>
     );
 }

@@ -1,7 +1,7 @@
 'use client';
-import {signIn, getSession} from 'next-auth/react';
-import {useEffect, Suspense} from 'react';
+import {getSession, signIn} from 'next-auth/react';
 import {useRouter, useSearchParams} from 'next/navigation';
+import {Suspense, useEffect} from 'react';
 
 function Login() {
     const router = useRouter();
