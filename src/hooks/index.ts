@@ -1,3 +1,3 @@
 export * from './useAuth';
-export * from './useMap';
+export * from './useBoolean';
 export * from './useReports';

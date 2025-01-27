@@ -3,7 +3,7 @@ import {useCallback, useContext, useEffect, useRef} from 'react';
 import '@amap/amap-jsapi-types';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {GuardContext} from '@/contexts';
-import {useMap} from '@/hooks';
+import {useMap} from '@/hooks/useMap';
 import {Position} from '@/types';
 import {AlertCircle} from 'lucide-react';
 
