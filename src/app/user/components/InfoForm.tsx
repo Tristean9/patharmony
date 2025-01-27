@@ -1,5 +1,5 @@
 'use client';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,10 +19,7 @@ import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {SubmitResponse, Position, VehicleType} from '@/types';
-
-interface InfoFormProps {
-    position: Position;
-}
+import {PositionContext} from '../page';
 
 export interface StudentSubmitParams {
     vehicleType: VehicleType;
@@ -37,10 +34,11 @@ const formSchema = z.object({
     remark: z.string().optional(), // remark 可选
 });
 
-export default function InfoForm({position}: InfoFormProps) {
+export default function InfoForm() {
     const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<boolean>(false);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+    const {currentPosition} = useContext(PositionContext);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -55,7 +53,7 @@ export default function InfoForm({position}: InfoFormProps) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         console.log(values);
-        const submitValues: StudentSubmitParams = {...values, position};
+        const submitValues: StudentSubmitParams = {...values, position: currentPosition};
 
         try {
             const response = await axios.post<SubmitResponse>(

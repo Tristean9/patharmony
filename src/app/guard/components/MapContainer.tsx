@@ -1,15 +1,13 @@
-import {useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef, useContext} from 'react';
 import '@amap/amap-jsapi-types';
 import {useMap} from '@/hooks';
 import {Position} from '@/types';
 import {AlertCircle} from 'lucide-react';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {PositionsContext} from '../page';
 
-interface MapContainerProps {
-    positionsData: Position[];
-}
-
-export default function MapContainer({positionsData}: MapContainerProps) {
+export default function MapContainer() {
+    const {selectedPositions} = useContext(PositionsContext);
     const markersRef = useRef<AMap.Marker[]>([]);
     const {map, loading, error, mapLoaded} = useMap('map-container');
 
@@ -50,8 +48,8 @@ export default function MapContainer({positionsData}: MapContainerProps) {
     }, [map, mapLoaded]);
 
     useEffect(() => {
-        updateMarkers(positionsData);
-    }, [positionsData, updateMarkers]);
+        updateMarkers(selectedPositions);
+    }, [selectedPositions, updateMarkers]);
 
     if (loading) {
         return <div>loading...</div>;

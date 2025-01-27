@@ -1,22 +1,16 @@
 'use client';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import '@amap/amap-jsapi-types';
 import {useMap} from '@/hooks/';
 import {Position} from '@/types';
 import {AlertCircle} from 'lucide-react';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {PositionContext} from '../page';
 
-interface MapContainerProps {
-    setCurrentPosition: (position: Position) => void;
-}
-
-export default function MapContainer({setCurrentPosition}: MapContainerProps) {
+export default function MapContainer() {
     const {map, loading, error, mapLoaded} = useMap('map-container');
     const [mapError, setMapError] = useState<string | null>(null);
-
-    const updatePosition = useCallback((newPosition: Position) => {
-        setCurrentPosition(newPosition);
-    }, [setCurrentPosition]);
+    const {updateCurrentPosition} = useContext(PositionContext);
 
     const updateMarker = useCallback(async () => {
         if (typeof window === 'undefined' || !mapLoaded) {
@@ -34,7 +28,7 @@ export default function MapContainer({setCurrentPosition}: MapContainerProps) {
                 center.getLng() ?? 116.308303,
                 center.getLat() ?? 39.988792,
             ] as Position;
-            updatePosition(initialPosition);
+            updateCurrentPosition(initialPosition);
 
             (map.current as AMap.Map).add(marker);
             // 给 marker 添加事件监听，拖拽后更新位置
@@ -44,13 +38,13 @@ export default function MapContainer({setCurrentPosition}: MapContainerProps) {
                     markerPos.getLng() ?? 116.308303,
                     markerPos.getLat() ?? 39.988792,
                 ] as Position;
-                updatePosition(newPosition);
+                updateCurrentPosition(newPosition);
             });
         }
         catch (error) {
             setMapError(`打开定位服务，并刷新页面。${error}`);
         }
-    }, [updatePosition, map, mapLoaded]);
+    }, [updateCurrentPosition, map, mapLoaded]);
 
     useEffect(() => {
         updateMarker();
