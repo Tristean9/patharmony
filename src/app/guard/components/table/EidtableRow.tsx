@@ -7,6 +7,7 @@ import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {Textarea} from '@/components/ui/textarea';
 import {useBoolean} from '@/hooks/useBoolean';
 import {ReportData, UpdateParam} from '@/types';
+import {formatDisplayDateTime} from '@/utils';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useContext} from 'react';
 import {useForm} from 'react-hook-form';
@@ -92,7 +93,7 @@ export default function EidtableRow({data}: EidtableRowProps) {
                             <Input
                                 id="date"
                                 name="date"
-                                value={data.date}
+                                value={formatDisplayDateTime(data.date)}
                                 disabled
                                 className="col-span-3"
                             />

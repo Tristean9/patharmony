@@ -1,13 +1,26 @@
 'use client';
+import {Button} from '@/components/ui/button';
 import {ReportData} from '@/types';
 import {formatDisplayDateTime} from '@/utils';
 import {ColumnDef} from '@tanstack/react-table';
+import {ArrowUpDown} from 'lucide-react';
 import EidtableRow from './EidtableRow';
 
 export const columns: ColumnDef<ReportData>[] = [
     {
         accessorKey: 'vehicleType',
-        header: '车辆类型',
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    车辆类型
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
+        cell: ({row}) => <div>{row.getValue('vehicleType')}</div>,
     },
     {
         accessorKey: 'plateNumber',
@@ -15,7 +28,17 @@ export const columns: ColumnDef<ReportData>[] = [
     },
     {
         accessorKey: 'date',
-        header: '日期',
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    日期
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
         cell: ({row}) => <div>{formatDisplayDateTime(row.getValue('date'))}</div>,
     },
     {

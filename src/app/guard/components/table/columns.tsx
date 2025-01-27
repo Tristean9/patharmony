@@ -1,13 +1,46 @@
 'use client';
+import {Button} from '@/components/ui/button';
+import {Checkbox} from '@/components/ui/checkbox';
 import {ReportData} from '@/types';
 import {formatDisplayDateTime} from '@/utils';
 import {ColumnDef} from '@tanstack/react-table';
+import {ArrowUpDown} from 'lucide-react';
 import EidtableRow from './EidtableRow';
 
 export const columns: ColumnDef<ReportData>[] = [
     {
+        accessorKey: 'reportId',
+        header: ({table}) => (
+            <Checkbox
+                checked={table.getIsAllPageRowsSelected()
+                    || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+                onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({row}) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={value => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
         accessorKey: 'vehicleType',
-        header: '车辆类型',
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    车辆类型
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
     },
     {
         accessorKey: 'plateNumber',
@@ -15,7 +48,17 @@ export const columns: ColumnDef<ReportData>[] = [
     },
     {
         accessorKey: 'date',
-        header: '日期',
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    日期
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
         cell: ({row}) => <div>{formatDisplayDateTime(row.getValue('date'))}</div>,
     },
     {
