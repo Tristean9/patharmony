@@ -1,21 +1,16 @@
 'use client';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import '@amap/amap-jsapi-types';
-import {useMap} from '@/hooks/';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {UserContext} from '@/contexts';
+import {useMap} from '@/hooks/useMap';
 import {Position} from '@/types';
-import {Alert} from 'antd';
+import {AlertCircle} from 'lucide-react';
 
-interface MapContainerProps {
-    setCurrentPosition: (position: Position) => void;
-}
-
-export default function MapContainer({setCurrentPosition}: MapContainerProps) {
+export default function MapContainer() {
     const {map, loading, error, mapLoaded} = useMap('map-container');
     const [mapError, setMapError] = useState<string | null>(null);
-
-    const updatePosition = useCallback((newPosition: Position) => {
-        setCurrentPosition(newPosition);
-    }, [setCurrentPosition]);
+    const {updateCurrentPosition} = useContext(UserContext);
 
     const updateMarker = useCallback(async () => {
         if (typeof window === 'undefined' || !mapLoaded) {
@@ -33,7 +28,7 @@ export default function MapContainer({setCurrentPosition}: MapContainerProps) {
                 center.getLng() ?? 116.308303,
                 center.getLat() ?? 39.988792,
             ] as Position;
-            updatePosition(initialPosition);
+            updateCurrentPosition(initialPosition);
 
             (map.current as AMap.Map).add(marker);
             // 给 marker 添加事件监听，拖拽后更新位置
@@ -43,13 +38,13 @@ export default function MapContainer({setCurrentPosition}: MapContainerProps) {
                     markerPos.getLng() ?? 116.308303,
                     markerPos.getLat() ?? 39.988792,
                 ] as Position;
-                updatePosition(newPosition);
+                updateCurrentPosition(newPosition);
             });
         }
         catch (error) {
             setMapError(`打开定位服务，并刷新页面。${error}`);
         }
-    }, [updatePosition, map, mapLoaded]);
+    }, [updateCurrentPosition, map, mapLoaded]);
 
     useEffect(() => {
         updateMarker();
@@ -58,20 +53,37 @@ export default function MapContainer({setCurrentPosition}: MapContainerProps) {
     if (loading) {
         return <div>Loading map...</div>;
     }
+
     if (mapError) {
-        return <Alert message={mapError} type="error" closable />;
+        return (
+            <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    {mapError}
+                </AlertDescription>
+            </Alert>
+        );
     }
 
     if (error) {
-        return <Alert message={error} type="warning" closable />;
+        return (
+            <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    {error}
+                </AlertDescription>
+            </Alert>
+        );
     }
+
     return (
         <div>
             <div className="font-medium">请拖拽地图或移动标记，确定提交的违停精确位置</div>
             <div
                 id="map-container"
-                className={'map-container'}
-                style={{height: '350px'}}
+                className="z-10 min-h-[200px] h-[30vh]"
             >
             </div>
         </div>

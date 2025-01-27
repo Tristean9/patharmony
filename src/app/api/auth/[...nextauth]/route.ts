@@ -1,8 +1,8 @@
 import {verifyThirdPartyToken} from '@/lib';
+import {DecodedToken} from '@/types';
+import {verify} from 'jsonwebtoken';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import {verify} from 'jsonwebtoken';
-import {DecodedToken} from '@/types';
 
 const handler = NextAuth({
     providers: [

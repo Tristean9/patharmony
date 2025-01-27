@@ -1,10 +1,10 @@
-import {NextRequest, NextResponse} from 'next/server';
-import {StudentSubmitParams} from '@/app/user/components/InfoForm';
+import {UserSubmitParams} from '@/app/user/components/InfoForm';
 import {addReportData} from '@/lib';
-import {VehicleType} from '@/types';
-import {getNow} from '@/utils';
 import {authenticate, unauthorizedResponse} from '@/lib/auth';
+import {VehicleType} from '@/types';
 import {DecodedToken} from '@/types';
+import {getNow} from '@/utils';
+import {NextRequest, NextResponse} from 'next/server';
 
 export async function POST(request: NextRequest) {
     try {
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestBody = await request.json();
-    const {vehicleType, plateNumber, remark, position} = requestBody as StudentSubmitParams;
+    const {vehicleType, plateNumber, remark, position} = requestBody as UserSubmitParams;
 
     // 验证输入信息
     if (!vehicleType || !position) {

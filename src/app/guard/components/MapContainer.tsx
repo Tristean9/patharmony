@@ -1,14 +1,14 @@
-import {useCallback, useEffect, useRef} from 'react';
+'use client';
+import {useCallback, useContext, useEffect, useRef} from 'react';
 import '@amap/amap-jsapi-types';
-import {useMap} from '@/hooks';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {GuardContext} from '@/contexts';
+import {useMap} from '@/hooks/useMap';
 import {Position} from '@/types';
-import {Alert} from 'antd';
+import {AlertCircle} from 'lucide-react';
 
-interface MapContainerProps {
-    positionsData: Position[];
-}
-
-export default function MapContainer({positionsData}: MapContainerProps) {
+export default function MapContainer() {
+    const {selectedPositions} = useContext(GuardContext);
     const markersRef = useRef<AMap.Marker[]>([]);
     const {map, loading, error, mapLoaded} = useMap('map-container');
 
@@ -49,21 +49,28 @@ export default function MapContainer({positionsData}: MapContainerProps) {
     }, [map, mapLoaded]);
 
     useEffect(() => {
-        updateMarkers(positionsData);
-    }, [positionsData, updateMarkers]);
+        updateMarkers(selectedPositions);
+    }, [selectedPositions, updateMarkers]);
 
     if (loading) {
         return <div>loading...</div>;
     }
     if (error) {
-        return <Alert message="Error" description={error} type="error" showIcon />;
+        return (
+            <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    {error}
+                </AlertDescription>
+            </Alert>
+        );
     }
     return (
         <div>
             <div
-                className="mt-6"
                 id="map-container"
-                style={{height: '500px'}}
+                className="mt-6 z-10 min-h-[500px] h-[30vh]"
             >
             </div>
         </div>

@@ -1,6 +1,6 @@
+import {ReportData, SubmitReportData} from '@/types';
 import {ObjectId} from 'mongodb';
 import clientPromise from './mongodb';
-import {SubmitReportData, ReportData} from '@/types';
 
 export async function getReportData(fromDate: string, endDate: string, processed?: boolean): Promise<ReportData[]> {
     try {

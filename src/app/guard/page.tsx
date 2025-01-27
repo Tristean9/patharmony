@@ -1,38 +1,41 @@
 'use client';
 import Header from '@/components/Header';
-import {Button} from 'antd';
+import {GuardContext} from '@/contexts';
+import {useAuth, useReports} from '@/hooks';
+import {Position} from '@/types';
+import {getNow} from '@/utils';
 import dynamic from 'next/dynamic';
 import {useState} from 'react';
-import {useAuth} from '@/hooks/useAuth';
-import {Position} from '@/types';
-const EditableTable = dynamic(() => import('./components/EditableTable'), {ssr: false});
+import {columns, DataTable} from './components/table';
 const MapContainer = dynamic(() => import('./components/MapContainer'), {ssr: false});
 
 export default function Guard() {
     useAuth('guard');
-    // 用于收到表格组件传递的数据
-    const [selectedPosition, setSelectedPosition] = useState<Position[]>([]);
-    // 用于给地图组件传递数据
-    const [positionsData, setPositionsData] = useState<Position[]>([]);
-
-    const handleLocationAddMarker = () => {
-        setPositionsData(selectedPosition);
-    };
+    const now = getNow();
+    const {reportData, error, loading, updateData} = useReports({
+        dateFrom: now.startOf('day').format(),
+        dateEnd: now.endOf('day').format(),
+        processed: false,
+    });
+    const [selectedPositions, setSelectedPositions] = useState<Position[]>([]);
 
     return (
-        <div>
-            <Header title="违停情况保安员确认页面" />
-            <div className="px-6">
-                <EditableTable handleSelectedPosition={setSelectedPosition} />
-                <Button
-                    type="primary"
-                    className="bg-customRed"
-                    onClick={handleLocationAddMarker}
-                >
-                    将选中的记录显示在地图上
-                </Button>
-                <MapContainer positionsData={positionsData} />
+        <GuardContext.Provider value={{selectedPositions, updateSelectedPositions: setSelectedPositions, updateData}}>
+            <div>
+                <Header title="违停情况保安员确认页面" />
+                <div className="px-6">
+                    <div className="container mx-auto py-10">
+                        {loading && <div>loading...</div>}
+                        {error
+                            ? <div>{error}</div>
+                            : <DataTable columns={columns} data={reportData} />}
+                    </div>
+                    <div>
+                        被选中的记录将会自动显示在地图上
+                    </div>
+                    <MapContainer />
+                </div>
             </div>
-        </div>
+        </GuardContext.Provider>
     );
 }

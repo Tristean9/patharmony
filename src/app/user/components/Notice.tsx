@@ -1,4 +1,3 @@
-import {List, Typography} from 'antd';
 import React from 'react';
 
 export default function Notice() {
@@ -11,16 +10,14 @@ export default function Notice() {
 
     return (
         <div className="px-6">
-            <div>注意事项</div>
-            <List
-                bordered
-                dataSource={notices}
-                renderItem={item => (
-                    <List.Item>
-                        <Typography.Text>{item}</Typography.Text>
-                    </List.Item>
-                )}
-            />
+            <div className="text-lg font-semibold mb-4">注意事项</div>
+            <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
+                {notices.map((notice, index) => (
+                    <li key={index} className="p-4">
+                        <span className="text-gray-700">{notice}</span>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }

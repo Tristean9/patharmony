@@ -1,3 +1,4 @@
+'use client';
 import {getCurrentPosition} from '@/utils';
 import AMapLoader from '@amap/amap-jsapi-loader';
 import axios from 'axios';
