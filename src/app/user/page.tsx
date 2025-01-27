@@ -18,7 +18,7 @@ export const PositionContext = createContext<PositionContextType>({
     updateCurrentPosition: () => {},
 });
 
-export default function Student() {
+export default function User() {
     useAuth('user');
     const [currentPosition, setCurrentPosition] = useState<Position>([116.308303, 39.988792]);
 

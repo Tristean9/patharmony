@@ -21,7 +21,7 @@ import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {PositionContext} from '../page';
 
-export interface StudentSubmitParams {
+export interface UserSubmitParams {
     vehicleType: VehicleType;
     plateNumber?: string;
     remark?: string;
@@ -50,10 +50,7 @@ export default function InfoForm() {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values);
-        const submitValues: StudentSubmitParams = {...values, position: currentPosition};
+        const submitValues: UserSubmitParams = {...values, position: currentPosition};
 
         try {
             const response = await axios.post<SubmitResponse>(

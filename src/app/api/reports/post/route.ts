@@ -1,4 +1,4 @@
-import {StudentSubmitParams} from '@/app/user/components/InfoForm';
+import {UserSubmitParams} from '@/app/user/components/InfoForm';
 import {addReportData} from '@/lib';
 import {authenticate, unauthorizedResponse} from '@/lib/auth';
 import {VehicleType} from '@/types';
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestBody = await request.json();
-    const {vehicleType, plateNumber, remark, position} = requestBody as StudentSubmitParams;
+    const {vehicleType, plateNumber, remark, position} = requestBody as UserSubmitParams;
 
     // 验证输入信息
     if (!vehicleType || !position) {
