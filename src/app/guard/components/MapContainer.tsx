@@ -1,14 +1,14 @@
 'use client';
-import {useCallback, useContext, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import '@amap/amap-jsapi-types';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
-import {GuardContext} from '@/contexts';
 import {useMap} from '@/hooks/useMap';
+import {useGuardStore} from '@/stores';
 import {Position} from '@/types';
 import {AlertCircle} from 'lucide-react';
 
 export default function MapContainer() {
-    const {selectedPositions} = useContext(GuardContext);
+    const {selectedPositions} = useGuardStore();
     const markersRef = useRef<AMap.Marker[]>([]);
     const {map, loading, error, mapLoaded} = useMap('map-container');
 
@@ -67,12 +67,10 @@ export default function MapContainer() {
         );
     }
     return (
-        <div>
-            <div
-                id="map-container"
-                className="mt-6 z-10 min-h-[500px] h-[30vh]"
-            >
-            </div>
+        <div
+            id="map-container"
+            className="mt-6 z-10 min-h-[500px] h-[30vh]"
+        >
         </div>
     );
 }

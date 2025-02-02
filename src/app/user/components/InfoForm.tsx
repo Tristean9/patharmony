@@ -1,5 +1,5 @@
 'use client';
-import { addReport } from '@/api/reports';
+import {addReport} from '@/api/reports';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,10 +14,10 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/
 import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {Textarea} from '@/components/ui/textarea';
-import {UserContext} from '@/contexts';
+import {useUserStore} from '@/stores/';
 import {VehicleType} from '@/types';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useContext, useState} from 'react';
+import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 
@@ -31,7 +31,7 @@ export default function InfoForm() {
     const [submitSuccess, setSubmitSuccess] = useState<boolean | null>(null);
     const [submitError, setSubmitError] = useState<boolean | null>(null);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
-    const {currentPosition} = useContext(UserContext);
+    const {currentPosition} = useUserStore();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,12 +50,12 @@ export default function InfoForm() {
             setSubmitSuccess(true);
             setSubmitError(false);
             setSubmitMessage('您的信息已提交，我们会尽快处理。');
-        } 
+        }
         else {
             setSubmitSuccess(false);
             setSubmitError(error);
             setSubmitMessage('提交失败，请检查您的信息是否正确。');
-        }        
+        }
     };
 
     const handleRetry = () => {
