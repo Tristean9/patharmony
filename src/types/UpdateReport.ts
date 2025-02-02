@@ -1,6 +1,6 @@
 import {VehicleType} from './VehicleType';
 
-export interface UpdateParam {
+export interface UpdateReport {
     reportId: string;
     vehicleType?: VehicleType;
     plateNumber?: string;

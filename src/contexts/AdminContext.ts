@@ -1,8 +1,8 @@
-import {UpdateParam} from '@/types';
+import {UpdateReport} from '@/types';
 import {createContext} from 'react';
 
 export interface AdminContextType {
-    updateData: (report: UpdateParam) => Promise<void>;
+    updateData: (report: UpdateReport) => Promise<void>;
     deleteData: (reportId: string) => Promise<void>;
 }
 

@@ -7,7 +7,7 @@ import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {Textarea} from '@/components/ui/textarea';
 import {AdminContext} from '@/contexts';
 import {useBoolean} from '@/hooks';
-import {ReportData, UpdateParam} from '@/types';
+import {ReportData, UpdateReport} from '@/types';
 import {formatDisplayDateTime} from '@/utils';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useContext} from 'react';
@@ -40,7 +40,7 @@ export default function EidtableRow({data}: EidtableRowProps) {
 
     const onSubmit = async ({confirmed, processed, addRemark}: z.infer<typeof formSchema>) => {
         try {
-            const submitData: UpdateParam = {
+            const submitData: UpdateReport = {
                 reportId: data.reportId,
                 ...(addRemark && {guardRemark: [addRemark.trim()]}),
                 confirmed,

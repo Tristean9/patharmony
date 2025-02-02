@@ -14,7 +14,7 @@ import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {Textarea} from '@/components/ui/textarea';
 import {UserContext} from '@/contexts';
-import {Position, SubmitResponse, VehicleType} from '@/types';
+import {Position, VehicleType} from '@/types';
 import {zodResolver} from '@hookform/resolvers/zod';
 import axios from 'axios';
 import {useContext, useState} from 'react';
@@ -53,7 +53,7 @@ export default function InfoForm() {
         const submitValues: UserSubmitParams = {...values, position: currentPosition};
 
         try {
-            const response = await axios.post<SubmitResponse>(
+            const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports/post`,
                 submitValues
             );

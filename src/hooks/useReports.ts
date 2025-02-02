@@ -1,4 +1,4 @@
-import {ReportData, UpdateParam} from '@/types';
+import {ReportData, UpdateReport} from '@/types';
 import axios from 'axios';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -76,7 +76,7 @@ export const useReports = ({
         }
     }, [dateFrom, dateEnd, processed]);
 
-    const updateData = useCallback(async (report: UpdateParam) => {
+    const updateData = useCallback(async (report: UpdateReport) => {
         try {
             const token = localStorage.getItem('jwt');
             const response = await axios.put<SubmitReportResponse>(
