@@ -33,8 +33,9 @@ export async function PUT(request: NextRequest) {
         );
     }
     catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '更新报告失败';
         return NextResponse.json(
-            {success: false, error},
+            {success: false, error: errorMessage},
             {status: 400}
         );
     }

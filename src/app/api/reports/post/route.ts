@@ -1,4 +1,4 @@
-import {UserSubmitParams} from '@/app/user/components/InfoForm';
+import {AddReport} from '@/api/reports';
 import {addReportData} from '@/lib';
 import {authenticate, unauthorizedResponse} from '@/lib/auth';
 import {VehicleType} from '@/types';
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestBody = await request.json();
-    const {vehicleType, plateNumber, remark, position} = requestBody as UserSubmitParams;
+    const {vehicleType, plateNumber, remark, position} = requestBody as AddReport;
 
     // 验证输入信息
     if (!vehicleType || !position) {
@@ -58,8 +58,9 @@ export async function POST(request: NextRequest) {
         );
     }
     catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '创建报告失败';
         return NextResponse.json(
-            {success: false, error},
+            {success: false, error: errorMessage},
             {status: 500}
         );
     }

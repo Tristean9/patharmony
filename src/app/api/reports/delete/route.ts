@@ -33,8 +33,9 @@ export async function DELETE(request: NextRequest) {
         );
     }
     catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '删除报告失败';
         return NextResponse.json(
-            {success: false, error},
+            {success: false, error: errorMessage},
             {status: 400}
         );
     }

@@ -36,8 +36,9 @@ export async function GET(request: NextRequest) {
         );
     }
     catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '获取报告失败';
         return NextResponse.json(
-            {data: null, error},
+            {data: null, error: errorMessage},
             {status: 500}
         );
     }
