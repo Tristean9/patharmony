@@ -21,27 +21,24 @@ export async function GET(request: NextRequest) {
     const processed = processedParam === null ? undefined : processedParam === 'true';
 
     if (!dateFrom && !dateEnd) {
-        return NextResponse.json({
-            success: false,
-            message: '缺少日期参数',
-            error: '缺少日期参数',
-        }, {status: 400});
+        return NextResponse.json(
+            {data: null, error: '缺少日期参数'},
+            {status: 400}
+        );
     }
 
     try {
         const data = await getReportData(dateFrom as string, dateEnd as string, processed);
 
-        return NextResponse.json({
-            success: true,
-            message: '查询完成！',
-            data,
-        }, {status: 200});
+        return NextResponse.json(
+            {data, error: null},
+            {status: 200}
+        );
     }
     catch (error) {
-        return NextResponse.json({
-            success: false,
-            message: '查询失败',
-            error,
-        }, {status: 500});
+        return NextResponse.json(
+            {data: null, error},
+            {status: 500}
+        );
     }
 }

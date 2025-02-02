@@ -17,28 +17,25 @@ export async function DELETE(request: NextRequest) {
     const url = new URL(request.url);
     const reportId = url.searchParams.get('reportId');
 
-    if (reportId) {
-        try {
-            await deleteReportData(reportId);
-
-            return NextResponse.json({
-                success: true,
-                message: '删除成功',
-            }, {status: 200});
-        }
-        catch (error) {
-            return NextResponse.json({
-                success: false,
-                message: '删除失败',
-                error,
-            }, {status: 400});
-        }
+    if (!reportId) {
+        return NextResponse.json(
+            {success: false, error: '缺少报告ID'},
+            {status: 400}
+        );
     }
-    else {
-        return NextResponse.json({
-            success: false,
-            message: '未找到报告ID',
-            error: '缺少报告ID',
-        }, {status: 400});
+
+    try {
+        await deleteReportData(reportId);
+
+        return NextResponse.json(
+            {success: true, error: '删除成功'},
+            {status: 200}
+        );
+    }
+    catch (error) {
+        return NextResponse.json(
+            {success: false, error},
+            {status: 400}
+        );
     }
 }

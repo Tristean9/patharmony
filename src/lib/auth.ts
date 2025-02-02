@@ -29,16 +29,12 @@ export async function verifyThirdPartyToken(token: string) {
     // 根据用户信息生成 JWT
     const jwt = sign(user, process.env.JWT_SECRET as string, {expiresIn: '7d'});
 
-    return {
-        ...user,
-        jwt,
-    };
+    return {...user, jwt};
 }
 
 export function unauthorizedResponse() {
-    return NextResponse.json({
-        success: false,
-        message: '未授权的请求。',
-        error: '未授权',
-    }, {status: 401});
+    return NextResponse.json(
+        {success: false, error: '未授权的请求。'},
+        {status: 401}
+    );
 }
