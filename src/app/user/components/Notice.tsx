@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Notice() {
     const notices = [
         '如果地图没有显示，请确保打开定位服务',
