@@ -1,6 +1,9 @@
 'use client';
+import ErrorAlert from '@/components/ErrorAlert';
 import {Button} from '@/components/ui/button';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import {useAdminStore} from '@/stores';
+import {ReportData} from '@/types';
 import {
     ColumnDef,
     flexRender,
@@ -10,19 +13,21 @@ import {
     SortingState,
     useReactTable,
 } from '@tanstack/react-table';
-import {useState} from 'react';
+import {use, useState} from 'react';
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
+interface DataTableProps {
+    columns: ColumnDef<ReportData, any>[];
 }
 
-export function DataTable<TData, TValue>({
-    columns,
-    data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable({columns}: DataTableProps) {
+    const {dataPromise} = useAdminStore();
+    const {reportData, error} = use(dataPromise);
     const [sorting, setSorting] = useState<SortingState>([]);
+    if (error) {
+        return <ErrorAlert message={error} />;
+    }
 
+    const data = reportData ?? [];
     const table = useReactTable({
         data,
         columns,

@@ -1,4 +1,5 @@
 'use client';
+import ErrorAlert from '@/components/ErrorAlert';
 import {Button} from '@/components/ui/button';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {useGuardStore} from '@/stores';
@@ -11,17 +12,22 @@ import {
     SortingState,
     useReactTable,
 } from '@tanstack/react-table';
-import {useEffect, useState} from 'react';
+import {use, useEffect, useState} from 'react';
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
+interface DataTableProps {
+    columns: ColumnDef<ReportData, any>[];
 }
 
-export function DataTable<TData, TValue>({
-    columns,
-    data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable({columns}: DataTableProps) {
+    const {dataPromise} = useGuardStore();
+    const {reportData, error} = use(dataPromise);
+
+    if (error) {
+        return <ErrorAlert message={error} />;
+    }
+
+    const data = reportData ?? [];
+
     const {updateSelectedPositions} = useGuardStore();
     const [rowSelection, setRowSelection] = useState({});
     const [sorting, setSorting] = useState<SortingState>([]);

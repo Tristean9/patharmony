@@ -1,5 +1,6 @@
 import {ReportData} from '@/types';
 import {Position, VehicleType} from '@/types';
+import {getNow} from '@/utils';
 import axios from 'axios';
 
 export interface AddReport {
@@ -25,7 +26,6 @@ export interface UpdateReport {
     confirmed?: boolean;
     processed?: boolean;
 }
-
 
 export async function addReport(submitValues: AddReport) {
     try {
@@ -72,6 +72,29 @@ export async function fetchReports({dateFrom, dateEnd, processed}: FetchReports)
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
         return {reportData: null, error: errorMessage};
     }
+}
+
+export async function fetchTodayReports() {
+    const now = getNow();
+
+    const {reportData, error} = await fetchReports({
+        dateFrom: now.startOf('day').format(),
+        dateEnd: now.endOf('day').format(),
+        processed: false,
+    });
+
+    return {reportData, error}
+}
+
+export async function fetchAllReports() {
+    const now = getNow();
+
+    const {reportData, error} = await fetchReports({
+        dateFrom: '2025-01-01T00:00:00+08:00',
+        dateEnd: now.endOf('day').format(),
+    });
+
+    return {reportData, error}
 }
 
 export async function updateReport(report: UpdateReport) {

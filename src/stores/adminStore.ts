@@ -1,12 +1,20 @@
-import {UpdateParam} from '@/types';
+import {deleteData, fetchAllReports, UpdateReport, updateReport} from '@/api/reports';
 import {create} from 'zustand';
 
 interface AdminState {
-    updateData: (report: UpdateParam) => Promise<void>;
+    dataPromise: ReturnType<typeof fetchAllReports>;
+    updateData: (report: UpdateReport) => Promise<void>;
     deleteData: (reportId: string) => Promise<void>;
 }
 
 export const useAdminStore = create<AdminState>(set => ({
-    updateData: async (report: UpdateParam) => {},
-    deleteData: async (reportId: string) => {},
+    dataPromise: fetchAllReports(),
+    updateData: async (report: UpdateReport) => {
+        await updateReport(report);
+        set({dataPromise: fetchAllReports()});
+    },
+    deleteData: async reportId => {
+        await deleteData(reportId);
+        set({dataPromise: fetchAllReports()});
+    },
 }));

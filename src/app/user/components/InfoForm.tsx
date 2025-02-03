@@ -31,7 +31,7 @@ export default function InfoForm() {
     const [submitSuccess, setSubmitSuccess] = useState<boolean | null>(null);
     const [submitError, setSubmitError] = useState<boolean | null>(null);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
-    const {currentPosition} = useUserStore();
+    const {position} = useUserStore();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -43,7 +43,7 @@ export default function InfoForm() {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const submitValues = {...values, position: currentPosition};
+        const submitValues = {...values, position};
 
         const {success, error} = await addReport(submitValues);
         if (success) {
