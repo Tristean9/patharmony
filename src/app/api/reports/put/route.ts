@@ -1,20 +1,17 @@
 import {updateReportData} from '@/lib';
-import {authenticate, unauthorizedResponse} from '@/lib/auth';
-import {DecodedToken} from '@/types';
+import {unauthorizedResponse} from '@/lib/auth';
+import {Role} from '@/types';
+import {getToken} from 'next-auth/jwt';
 import {NextRequest, NextResponse} from 'next/server';
 
-export async function PUT(request: NextRequest) {
-    try {
-        const token = await authenticate(request) as DecodedToken;
-        if (token?.role !== 'admin' && token?.role !== 'guard') {
-            unauthorizedResponse();
-        }
-    }
-    catch {
-        unauthorizedResponse();
+export async function PUT(req: NextRequest) {
+    const token = await getToken({req});
+
+    if (token?.role !== Role.Admin && token?.role !== Role.Guard) {
+        return unauthorizedResponse();
     }
 
-    const updatedReport = await request.json();
+    const updatedReport = await req.json();
     const {reportId} = updatedReport;
 
     if (!reportId) {

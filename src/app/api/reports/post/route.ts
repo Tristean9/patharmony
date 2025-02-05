@@ -1,23 +1,19 @@
 import {AddReport} from '@/api/reports';
 import {addReportData} from '@/lib';
-import {authenticate, unauthorizedResponse} from '@/lib/auth';
-import {VehicleType} from '@/types';
-import {DecodedToken} from '@/types';
+import {unauthorizedResponse} from '@/lib/auth';
+import {Role, VehicleType} from '@/types';
 import {getNow} from '@/utils';
+import {getToken} from 'next-auth/jwt';
 import {NextRequest, NextResponse} from 'next/server';
 
-export async function POST(request: NextRequest) {
-    try {
-        const token = await authenticate(request) as DecodedToken;
-        if (!token.role) {
-            unauthorizedResponse();
-        }
-    }
-    catch {
-        unauthorizedResponse();
+export async function POST(req: NextRequest) {
+    const token = await getToken({req});
+
+    if (token?.role !== Role.Admin && token?.role !== Role.Guard && token?.role !== Role.User) {
+        return unauthorizedResponse();
     }
 
-    const requestBody = await request.json();
+    const requestBody = await req.json();
     const {vehicleType, plateNumber, remark, position} = requestBody as AddReport;
 
     // 验证输入信息

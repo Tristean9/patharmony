@@ -1,6 +1,5 @@
 import {verifyThirdPartyToken} from '@/lib';
-import {DecodedToken} from '@/types';
-import {verify} from 'jsonwebtoken';
+import {Role} from '@/types';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -13,35 +12,17 @@ const handler = NextAuth({
             },
             authorize: async credentials => {
                 const token = credentials?.token;
+                console.log('token', token);
 
                 if (!token) {
                     return null;
                 }
 
-                // 如果 token 是 JWT，则验证 JWT
-                try {
-                    const decoded = verify(token as string, process.env.JWT_SECRET as string) as DecodedToken;
-                    if (['user', 'guard', 'admin'].includes(decoded.role)) {
-                        return {
-                            id: decoded.id,
-                            role: decoded.role,
-                            jwt: token,
-                        };
-                    }
-                    else {
-                        return null;
-                    }
+                const role = await verifyThirdPartyToken(token);
+                if (role && ['user', 'guard', 'admin'].includes(role)) {
+                    return {id: 'user-id', role: role as Role};
                 }
-                catch (error) {
-                    // 如果 token 不是 JWT，则根据 role 生成 JWT
-                    const user = await verifyThirdPartyToken(token);
-                    if (user && ['user', 'guard', 'admin'].includes(user.role)) {
-                        return user;
-                    }
-                    else {
-                        return null;
-                    }
-                }
+                return null;
             },
         }),
     ],
@@ -49,26 +30,29 @@ const handler = NextAuth({
         strategy: 'jwt',
     },
     jwt: {
-        secret: process.env.JWT_SECRET,
+        secret: process.env.NEXTAUTH_SECRET,
         maxAge: 7 * 24 * 60 * 60, // JWT 有效期为一周（7 天）
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({token, user}) {
-            if (user) {
+            if (user?.role) {
                 token.id = user.id;
                 token.role = user.role; // 假设用户对象中有角色信息
-                token.jwt = user.jwt; // 将 JWT 添加到 token 中
             }
             return token;
         },
         async session({session, token}) {
-            session.user.id = token.id;
-            session.user.role = token.role;
-            session.user.jwt = token.jwt; // 将 JWT 添加到 session 中
+            // 类型断言，告诉 TypeScript token 的类型
+            const tokenWithRole = token as {id: string, role: Role};
 
+            session.user.id = tokenWithRole.id;
+            session.user.role = tokenWithRole.role;
             return session;
         },
+    },
+    pages: {
+        signIn: '/auth/signin',
     },
 });
 

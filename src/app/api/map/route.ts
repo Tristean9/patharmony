@@ -1,16 +1,13 @@
-import {authenticate, unauthorizedResponse} from '@/lib/auth';
-import {DecodedToken} from '@/types';
+import {unauthorizedResponse} from '@/lib/auth';
+import {Role} from '@/types';
+import {getToken} from 'next-auth/jwt';
 import {NextRequest, NextResponse} from 'next/server';
 
-export async function GET(request: NextRequest) {
-    try {
-        const token = await authenticate(request) as DecodedToken;
-        if (!token.role) {
-            unauthorizedResponse();
-        }
-    }
-    catch {
-        unauthorizedResponse();
+export async function GET(req: NextRequest) {
+    const token = await getToken({req});
+
+    if (token?.role !== Role.Admin && token?.role !== Role.Guard && token?.role !== Role.User) {
+        return unauthorizedResponse();
     }
 
     return NextResponse.json({

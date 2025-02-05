@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import {UpdateReport} from '@/api/reports';
 import {Button} from '@/components/ui/button';
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog';

@@ -1,14 +1,11 @@
 'use client';
 import Header from '@/components/Header';
-import {useAuth} from '@/hooks';
 import dynamic from 'next/dynamic';
 import {Suspense} from 'react';
 import {columns, DataTable} from './components/table';
 const Map = dynamic(() => import('./components/Map'), {ssr: false});
 
 export default function Guard() {
-    useAuth('guard');
-
     return (
         <>
             <Header title="违停情况保安员确认页面" />

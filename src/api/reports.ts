@@ -83,7 +83,7 @@ export async function fetchTodayReports() {
         processed: false,
     });
 
-    return {reportData, error}
+    return {reportData, error};
 }
 
 export async function fetchAllReports() {
@@ -94,7 +94,7 @@ export async function fetchAllReports() {
         dateEnd: now.endOf('day').format(),
     });
 
-    return {reportData, error}
+    return {reportData, error};
 }
 
 export async function updateReport(report: UpdateReport) {
