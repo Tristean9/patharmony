@@ -8,7 +8,7 @@ import Notice from './components/Notice';
 export default function User() {
     return (
         <>
-            <Header title="违停情况学生反馈提交页面" />
+            <Header title="违停情况用户反馈页面" />
             <Suspense fallback={<div>Loading...</div>}>
                 <ClientOnly>
                     <Map />
