@@ -21,7 +21,7 @@ export default function Map() {
         return <ErrorAlert message={positionError} />;
     }
 
-    if (!mapInstanceRef.current) {
+    if (!mapInstanceRef.current && position) {
         AMapLoader
             .load({
                 key: apikey,
@@ -39,6 +39,8 @@ export default function Map() {
                     title: '当前位置',
                     draggable: true,
                 });
+
+                updateCurrentPosition(position);
 
                 marker.on('dragend', () => {
                     const markerPos = marker.getPosition() as AMap.LngLat;

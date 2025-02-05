@@ -1,9 +1,8 @@
-'use client';
+import ClientOnly from '@/components/ClientOnly';
 import Header from '@/components/Header';
-import dynamic from 'next/dynamic';
 import {Suspense} from 'react';
+import Map from './components/Map';
 import {columns, DataTable} from './components/table';
-const Map = dynamic(() => import('./components/Map'), {ssr: false});
 
 export default function Guard() {
     return (
@@ -17,7 +16,9 @@ export default function Guard() {
                 </Suspense>
                 <div>被选中的记录将会自动显示在地图上</div>
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Map />
+                    <ClientOnly>
+                        <Map />
+                    </ClientOnly>
                 </Suspense>
             </div>
         </>
