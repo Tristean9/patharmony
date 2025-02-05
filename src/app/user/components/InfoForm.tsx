@@ -1,4 +1,5 @@
 'use client';
+import {addReport} from '@/api/reports';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -13,20 +14,12 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/
 import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {Textarea} from '@/components/ui/textarea';
-import {UserContext} from '@/contexts';
-import {Position, SubmitResponse, VehicleType} from '@/types';
+import {useUserStore} from '@/stores/';
+import {VehicleType} from '@/types';
 import {zodResolver} from '@hookform/resolvers/zod';
-import axios from 'axios';
-import {useContext, useState} from 'react';
+import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
-
-export interface UserSubmitParams {
-    vehicleType: VehicleType;
-    plateNumber?: string;
-    remark?: string;
-    position: Position;
-}
 
 const formSchema = z.object({
     vehicleType: z.nativeEnum(VehicleType), // 使用 z.enum 定义 VehicleType 类型
@@ -35,10 +28,10 @@ const formSchema = z.object({
 });
 
 export default function InfoForm() {
-    const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
-    const [submitError, setSubmitError] = useState<boolean>(false);
+    const [submitSuccess, setSubmitSuccess] = useState<boolean | null>(null);
+    const [submitError, setSubmitError] = useState<boolean | null>(null);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
-    const {currentPosition} = useContext(UserContext);
+    const {position} = useUserStore();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,26 +43,24 @@ export default function InfoForm() {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const submitValues: UserSubmitParams = {...values, position: currentPosition};
+        const submitValues = {...values, position};
 
-        try {
-            const response = await axios.post<SubmitResponse>(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports/post`,
-                submitValues
-            );
-            const {success, message} = response.data;
-            setSubmitSuccess(success);
-            setSubmitError(!success);
-            setSubmitMessage(message);
+        const {success, error} = await addReport(submitValues);
+        if (success) {
+            setSubmitSuccess(true);
+            setSubmitError(false);
+            setSubmitMessage('您的信息已提交，我们会尽快处理。');
         }
-        catch (error) {
-            setSubmitMessage(axios.isAxiosError(error) ? error.response?.data?.error : '提交违停信息失败');
+        else {
+            setSubmitSuccess(false);
+            setSubmitError(error);
+            setSubmitMessage('提交失败，请检查您的信息是否正确。');
         }
     };
 
     const handleRetry = () => {
         setSubmitSuccess(false);
-        setSubmitError(false);
+        setSubmitError(null);
         setSubmitMessage(null);
         form.reset();
     };

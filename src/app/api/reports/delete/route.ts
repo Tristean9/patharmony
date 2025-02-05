@@ -1,44 +1,39 @@
 import {deleteReportData} from '@/lib';
-import {authenticate, unauthorizedResponse} from '@/lib/auth';
-import {DecodedToken} from '@/types';
+import {unauthorizedResponse} from '@/lib/auth';
+import {Role} from '@/types';
+import {getToken} from 'next-auth/jwt';
 import {NextRequest, NextResponse} from 'next/server';
 
-export async function DELETE(request: NextRequest) {
-    try {
-        const token = await authenticate(request) as DecodedToken;
-        if (token?.role !== 'admin') {
-            unauthorizedResponse();
-        }
-    }
-    catch {
-        unauthorizedResponse();
+export async function DELETE(req: NextRequest) {
+    const token = await getToken({req});
+
+    if (token?.role !== Role.Admin) {
+        return unauthorizedResponse();
     }
 
-    const url = new URL(request.url);
+    const url = new URL(req.url);
     const reportId = url.searchParams.get('reportId');
 
-    if (reportId) {
-        try {
-            await deleteReportData(reportId);
-
-            return NextResponse.json({
-                success: true,
-                message: '删除成功',
-            }, {status: 200});
-        }
-        catch (error) {
-            return NextResponse.json({
-                success: false,
-                message: '删除失败',
-                error,
-            }, {status: 400});
-        }
+    if (!reportId) {
+        return NextResponse.json(
+            {success: false, error: '缺少报告ID'},
+            {status: 400}
+        );
     }
-    else {
-        return NextResponse.json({
-            success: false,
-            message: '未找到报告ID',
-            error: '缺少报告ID',
-        }, {status: 400});
+
+    try {
+        await deleteReportData(reportId);
+
+        return NextResponse.json(
+            {success: true, error: '删除成功'},
+            {status: 200}
+        );
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : '删除报告失败';
+        return NextResponse.json(
+            {success: false, error: errorMessage},
+            {status: 400}
+        );
     }
 }

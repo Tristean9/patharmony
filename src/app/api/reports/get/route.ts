@@ -1,47 +1,42 @@
 import {getReportData} from '@/lib';
-import {authenticate, unauthorizedResponse} from '@/lib/auth';
-import {DecodedToken} from '@/types';
+import {unauthorizedResponse} from '@/lib/auth';
+import {Role} from '@/types';
+import {getToken} from 'next-auth/jwt';
 import {NextRequest, NextResponse} from 'next/server';
 
-export async function GET(request: NextRequest) {
-    try {
-        const token = await authenticate(request) as DecodedToken;
-        if (token?.role !== 'admin' && token?.role !== 'guard') {
-            unauthorizedResponse();
-        }
-    }
-    catch {
-        unauthorizedResponse();
+export async function GET(req: NextRequest) {
+    const token = await getToken({req});
+
+    if (token?.role !== Role.Admin && token?.role !== Role.Guard) {
+        return unauthorizedResponse();
     }
 
-    const url = new URL(request.url);
+    const url = new URL(req.url);
     const dateFrom = url.searchParams.get('dateFrom');
     const dateEnd = url.searchParams.get('dateEnd');
     const processedParam = url.searchParams.get('processed');
     const processed = processedParam === null ? undefined : processedParam === 'true';
 
     if (!dateFrom && !dateEnd) {
-        return NextResponse.json({
-            success: false,
-            message: '缺少日期参数',
-            error: '缺少日期参数',
-        }, {status: 400});
+        return NextResponse.json(
+            {data: null, error: '缺少日期参数'},
+            {status: 400}
+        );
     }
 
     try {
         const data = await getReportData(dateFrom as string, dateEnd as string, processed);
 
-        return NextResponse.json({
-            success: true,
-            message: '查询完成！',
-            data,
-        }, {status: 200});
+        return NextResponse.json(
+            {data, error: null},
+            {status: 200}
+        );
     }
     catch (error) {
-        return NextResponse.json({
-            success: false,
-            message: '查询失败',
-            error,
-        }, {status: 500});
+        const errorMessage = error instanceof Error ? error.message : '获取报告失败';
+        return NextResponse.json(
+            {data: null, error: errorMessage},
+            {status: 500}
+        );
     }
 }

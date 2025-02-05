@@ -1,51 +1,39 @@
 import {updateReportData} from '@/lib';
-import {authenticate, unauthorizedResponse} from '@/lib/auth';
-import {DecodedToken} from '@/types';
+import {unauthorizedResponse} from '@/lib/auth';
+import {Role} from '@/types';
+import {getToken} from 'next-auth/jwt';
 import {NextRequest, NextResponse} from 'next/server';
 
-export async function PUT(request: NextRequest) {
-    try {
-        const token = await authenticate(request) as DecodedToken;
-        if (token?.role !== 'admin' && token?.role !== 'guard') {
-            unauthorizedResponse();
-        }
+export async function PUT(req: NextRequest) {
+    const token = await getToken({req});
+
+    if (token?.role !== Role.Admin && token?.role !== Role.Guard) {
+        return unauthorizedResponse();
     }
-    catch {
-        unauthorizedResponse();
-    }
-    const updatedReport = await request.json();
+
+    const updatedReport = await req.json();
     const {reportId} = updatedReport;
 
     if (!reportId) {
-        return new Response(
-            JSON.stringify({
-                success: false,
-                message: '未找到报告ID',
-                error: new Error('Missing report ID'),
-            }),
-            {status: 400, headers: {'Content-Type': 'application/json'}}
+        return NextResponse.json(
+            {success: false, error: '未找到报告ID'},
+            {status: 400}
         );
     }
 
     try {
         await updateReportData(updatedReport);
 
-        return new Response(
-            JSON.stringify({
-                success: true,
-                message: '更新成功',
-            }),
-            {status: 200, headers: {'Content-Type': 'application/json'}}
+        return NextResponse.json(
+            {success: true, error: null},
+            {status: 200}
         );
     }
     catch (error) {
-        return new Response(
-            JSON.stringify({
-                success: false,
-                message: '更新失败',
-                error,
-            }),
-            {status: 400, headers: {'Content-Type': 'application/json'}}
+        const errorMessage = error instanceof Error ? error.message : '更新报告失败';
+        return NextResponse.json(
+            {success: false, error: errorMessage},
+            {status: 400}
         );
     }
 }

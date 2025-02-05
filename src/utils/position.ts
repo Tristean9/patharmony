@@ -1,8 +1,8 @@
 import {Position} from '@/types';
 
 interface GetLocationResult {
-    position: Position | null;
-    error: string | null;
+    position?: Position | null;
+    error?: string | null;
 }
 
 // 获取当前定位
