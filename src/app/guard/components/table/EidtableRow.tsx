@@ -1,3 +1,4 @@
+import {UpdateReport} from '@/api/reports';
 import {Button} from '@/components/ui/button';
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
@@ -5,12 +6,11 @@ import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {Textarea} from '@/components/ui/textarea';
-import {GuardContext} from '@/contexts';
 import {useBoolean} from '@/hooks';
-import {ReportData, UpdateParam} from '@/types';
+import {useGuardStore} from '@/stores';
+import {ReportData} from '@/types';
 import {formatDisplayDateTime} from '@/utils';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useContext} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 
@@ -25,7 +25,7 @@ const formSchema = z.object({
 
 export default function EidtableRow({data}: EidtableRowProps) {
     const {value: isOpen, setFalse: closeDialog, toggle} = useBoolean(false);
-    const {updateData} = useContext(GuardContext);
+    const {updateData} = useGuardStore();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -36,12 +36,11 @@ export default function EidtableRow({data}: EidtableRowProps) {
 
     const onSubmit = async ({confirmed, addRemark}: z.infer<typeof formSchema>) => {
         try {
-            const submitData: UpdateParam = {
+            const submitData: UpdateReport = {
                 reportId: data.reportId,
                 ...(addRemark && {guardRemark: [addRemark.trim()]}),
                 confirmed,
             };
-            console.log('submitData', submitData);
 
             await updateData(submitData);
             form.reset({

@@ -1,41 +1,35 @@
-import {UserSubmitParams} from '@/app/user/components/InfoForm';
+import {AddReport} from '@/api/reports';
 import {addReportData} from '@/lib';
-import {authenticate, unauthorizedResponse} from '@/lib/auth';
-import {VehicleType} from '@/types';
-import {DecodedToken} from '@/types';
+import {unauthorizedResponse} from '@/lib/auth';
+import {Role, VehicleType} from '@/types';
 import {getNow} from '@/utils';
+import {getToken} from 'next-auth/jwt';
 import {NextRequest, NextResponse} from 'next/server';
 
-export async function POST(request: NextRequest) {
-    try {
-        const token = await authenticate(request) as DecodedToken;
-        if (token?.role !== 'user' && token?.role !== 'guard') {
-            unauthorizedResponse();
-        }
-    }
-    catch {
-        unauthorizedResponse();
+export async function POST(req: NextRequest) {
+    const token = await getToken({req});
+
+    if (token?.role !== Role.Admin && token?.role !== Role.Guard && token?.role !== Role.User) {
+        return unauthorizedResponse();
     }
 
-    const requestBody = await request.json();
-    const {vehicleType, plateNumber, remark, position} = requestBody as UserSubmitParams;
+    const requestBody = await req.json();
+    const {vehicleType, plateNumber, remark, position} = requestBody as AddReport;
 
     // 验证输入信息
     if (!vehicleType || !position) {
-        return NextResponse.json({
-            success: false,
-            message: '信息不完整，请确保填写车辆和位置字段。',
-            error: '缺少字段',
-        }, {status: 400});
+        return NextResponse.json(
+            {success: false, error: '信息不完整，请确保填写车辆和位置字段。'},
+            {status: 400}
+        );
     }
 
     const validVehicleTypes = ['自行车', '电动车', '机动车'];
     if (!validVehicleTypes.includes(vehicleType)) {
-        return NextResponse.json({
-            success: false,
-            message: '车辆类型无效。',
-            error: '无效的车辆类型',
-        }, {status: 400});
+        return NextResponse.json(
+            {success: false, error: '无效的车辆类型'},
+            {status: 400}
+        );
     }
 
     const now = getNow();
@@ -54,16 +48,16 @@ export async function POST(request: NextRequest) {
 
     try {
         await addReportData(newReport);
-        return NextResponse.json({
-            success: true,
-            message: '反馈成功',
-        }, {status: 200});
+        return NextResponse.json(
+            {success: true, error: null},
+            {status: 200}
+        );
     }
     catch (error) {
-        return NextResponse.json({
-            success: false,
-            message: '提交失败，请稍后重试。',
-            error,
-        }, {status: 500});
+        const errorMessage = error instanceof Error ? error.message : '创建报告失败';
+        return NextResponse.json(
+            {success: false, error: errorMessage},
+            {status: 500}
+        );
     }
 }

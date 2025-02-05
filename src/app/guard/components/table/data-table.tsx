@@ -1,7 +1,8 @@
 'use client';
+import ErrorAlert from '@/components/ErrorAlert';
 import {Button} from '@/components/ui/button';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
-import {GuardContext} from '@/contexts';
+import {useGuardStore} from '@/stores';
 import {ReportData} from '@/types';
 import {
     ColumnDef,
@@ -11,18 +12,23 @@ import {
     SortingState,
     useReactTable,
 } from '@tanstack/react-table';
-import {useContext, useEffect, useState} from 'react';
+import {use, useEffect, useState} from 'react';
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
+interface DataTableProps {
+    columns: ColumnDef<ReportData, any>[];
 }
 
-export function DataTable<TData, TValue>({
-    columns,
-    data,
-}: DataTableProps<TData, TValue>) {
-    const {updateSelectedPositions} = useContext(GuardContext);
+export function DataTable({columns}: DataTableProps) {
+    const {dataPromise} = useGuardStore();
+    const {reportData, error} = use(dataPromise);
+
+    if (error) {
+        return <ErrorAlert message={error} />;
+    }
+
+    const data = reportData ?? [];
+
+    const {updateSelectedPositions} = useGuardStore();
     const [rowSelection, setRowSelection] = useState({});
     const [sorting, setSorting] = useState<SortingState>([]);
     const table = useReactTable({
@@ -47,7 +53,7 @@ export function DataTable<TData, TValue>({
     }, [rowSelection, data, updateSelectedPositions]);
 
     return (
-        <div>
+        <>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
@@ -112,6 +118,6 @@ export function DataTable<TData, TValue>({
                     下一页
                 </Button>
             </div>
-        </div>
+        </>
     );
 }
